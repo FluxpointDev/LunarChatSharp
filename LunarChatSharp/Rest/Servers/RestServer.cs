@@ -1,0 +1,36 @@
+﻿using System.Text.Json.Serialization;
+
+namespace LunarChatSharp.Rest.Servers;
+
+public class RestServer
+{
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("owner_id")]
+    public required string OwnerId { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public required DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("system_messages")]
+    public required RestServerSystemMessages SystemMessages { get; set; }
+
+    public string GetFallback()
+    {
+        string[] Split = Name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (!Split.Any())
+            return null!;
+
+        if (Split.Length == 1)
+            return Split[0].ToUpper()[0].ToString();
+
+        return $"{Split[0].ToUpper()[0]}{Split.Last().ToUpper()[0]}";
+    }
+}
