@@ -2,10 +2,10 @@
 
 namespace LunarChatSharp.Websocket.Events;
 
-public class BlockDeleteEvent : ISocketEvent
+public class RelationDeleteEvent : ISocketEvent
 {
     [JsonPropertyName("type")]
-    public string Type { get; set; } = "account_block_delete";
+    public string Type { get; set; } = "account_relation_delete";
 
     [JsonPropertyName("user_id")]
     public required string? UserId { get; set; }

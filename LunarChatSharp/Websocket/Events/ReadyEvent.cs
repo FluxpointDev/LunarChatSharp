@@ -29,10 +29,7 @@ public class ReadyEvent : ISocketEvent
     [JsonPropertyName("emojis")]
     public RestEmoji[] Emojis { get; set; }
 
-    [JsonPropertyName("friends")]
-    public Dictionary<string, RestRelation> Friends { get; set; }
-
-    [JsonPropertyName("blocks")]
-    public Dictionary<string, RestRelation> Blocks { get; set; }
+    [JsonPropertyName("relations")]
+    public Dictionary<string, RestRelation> Relations { get; set; }
 }
 

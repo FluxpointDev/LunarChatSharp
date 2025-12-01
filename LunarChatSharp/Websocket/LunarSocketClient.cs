@@ -161,8 +161,7 @@ public class LunarSocketClient
                         _firstConnected = false;
                         ReadyEvent? data = payload.Deserialize<ReadyEvent>(JsonOptions);
                         State.Channels = data.Channels;
-                        State.Friends = data.Friends;
-                        State.Blocks = data.Blocks;
+                        State.Relations = data.Relations;
                         try
                         {
                             State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers.ToDictionary(x => x.Id, x => new SocketServerState
@@ -264,32 +263,23 @@ public class LunarSocketClient
                             State.CurrentServer.OnChannelUpdate.Invoke(channel);
                     }
                     break;
-                case "account_friend_create":
+                case "account_relation_create":
                     {
-                        FriendCreateEvent? data = payload.Deserialize<FriendCreateEvent>(JsonOptions);
-                        State.Friends.Add(data.Relation.UserId, data.Relation);
-                        State.OnFriendAdd.Invoke(data.Relation);
+                        RelationCreateEvent? data = payload.Deserialize<RelationCreateEvent>(JsonOptions);
+                        State.Relations.Add(data.Relation.UserId, data.Relation);
+                        State.OnRelationAdd.Invoke(data.Relation);
                     }
                     break;
-                case "account_friend_delete":
+                case "account_relation_delete":
                     {
-                        FriendDeleteEvent? data = payload.Deserialize<FriendDeleteEvent>(JsonOptions);
-                        State.Friends.Remove(data.UserId, out var relation);
-                        State.OnFriendRemove.Invoke(relation);
+                        RelationDeleteEvent? data = payload.Deserialize<RelationDeleteEvent>(JsonOptions);
+                        State.Relations.Remove(data.UserId, out var relation);
+                        State.OnRelationRemove.Invoke(relation);
                     }
                     break;
-                case "account_block_create":
+                case "account_relation_update":
                     {
-                        BlockCreateEvent? data = payload.Deserialize<BlockCreateEvent>(JsonOptions);
-                        State.Blocks.Add(data.Relation.UserId, data.Relation);
-                        State.OnBlockAdd.Invoke(data.Relation);
-                    }
-                    break;
-                case "account_block_delete":
-                    {
-                        BlockDeleteEvent? data = payload.Deserialize<BlockDeleteEvent>(JsonOptions);
-                        State.Blocks.Remove(data.UserId, out var relation);
-                        State.OnBlockRemove.Invoke(relation);
+                        RelationUpdateEvent? data = payload.Deserialize<RelationUpdateEvent>(JsonOptions);
                     }
                     break;
             }

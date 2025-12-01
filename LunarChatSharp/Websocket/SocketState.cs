@@ -16,8 +16,7 @@ public class SocketState
     public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
     public ConcurrentDictionary<string, List<RestChannel>> Channels = new ConcurrentDictionary<string, List<RestChannel>>();
 
-    public Dictionary<string, RestRelation> Friends = new Dictionary<string, RestRelation>();
-    public Dictionary<string, RestRelation> Blocks = new Dictionary<string, RestRelation>();
+    public Dictionary<string, RestRelation> Relations = new Dictionary<string, RestRelation>();
 
     public delegate void ServerEventHandler(RestServer server);
 
@@ -30,11 +29,8 @@ public class SocketState
     public event ServerEventHandler? OnSelectServer;
     public event ChannelEventHandler? OnSelectChannel;
 
-    public Func<RestRelation, Task>? OnFriendAdd;
-    public Func<RestRelation, Task>? OnFriendRemove;
-
-    public Func<RestRelation, Task>? OnBlockAdd;
-    public Func<RestRelation, Task>? OnBlockRemove;
+    public Func<RestRelation, Task>? OnRelationAdd;
+    public Func<RestRelation, Task>? OnRelationRemove;
 
     public Func<RestMessage, Task>? OnMessageEdit;
     public Func<RestMessage, Task>? OnMessageDelete;
