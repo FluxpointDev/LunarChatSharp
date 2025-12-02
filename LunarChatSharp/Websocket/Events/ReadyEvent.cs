@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Rest.Channels;
 using LunarChatSharp.Rest.Messages;
+using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
 using System.Collections.Concurrent;
@@ -24,15 +25,25 @@ public class ReadyEvent : ISocketEvent
     public RestAccount? Account { get; set; }
 
     [JsonPropertyName("servers")]
-    public RestServer[] Servers { get; set; }
-
-    [JsonPropertyName("channels")]
-    public ConcurrentDictionary<string, List<RestChannel>> Channels { get; set; }
-
-    [JsonPropertyName("emojis")]
-    public RestEmoji[] Emojis { get; set; }
+    public ConcurrentDictionary<string, ServerState> Servers { get; set; }
 
     [JsonPropertyName("relations")]
     public Dictionary<string, RestRelation> Relations { get; set; }
 }
+public class ServerState
+{
+    [JsonPropertyName("server")]
+    public RestServer Server { get; set; }
 
+    [JsonIgnore]
+    public ConcurrentDictionary<string, List<RestMessage>> Messages = new ConcurrentDictionary<string, List<RestMessage>>();
+
+    [JsonPropertyName("channels")]
+    public ConcurrentDictionary<string, RestChannel> Channels { get; set; } = new ConcurrentDictionary<string, RestChannel>();
+
+    [JsonPropertyName("roles")]
+    public ConcurrentDictionary<string, RestRole> Roles { get; set; } = new ConcurrentDictionary<string, RestRole>();
+
+    [JsonPropertyName("emojis")]
+    public ConcurrentDictionary<string, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<string, RestEmoji>();
+}

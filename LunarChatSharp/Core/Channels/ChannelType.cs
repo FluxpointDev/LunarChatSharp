@@ -2,5 +2,5 @@
 
 public enum ChannelType
 {
-    Text, Voice, Direct
+    Text, Voice, Direct, Group
 }

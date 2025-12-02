@@ -9,7 +9,4 @@ public class UpdateChannelRequest : ILunarRequest
 
     [JsonPropertyName("topic")]
     public string? Topic { get; set; }
-
-    [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
 }

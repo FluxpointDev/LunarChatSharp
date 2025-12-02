@@ -12,4 +12,7 @@ public class RestEmoji
 
     [JsonPropertyName("created_at")]
     public required DateTime? CreatedAt { get; set; }
+
+    [JsonPropertyName("created_by")]
+    public required string CreatedBy { get; set; }
 }

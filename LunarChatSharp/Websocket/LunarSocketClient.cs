@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Rest.Channels;
 using LunarChatSharp.Rest.Messages;
+using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
 using System.Collections.Concurrent;
@@ -160,22 +161,36 @@ public class LunarSocketClient
                     {
                         _firstConnected = false;
                         ReadyEvent? data = payload.Deserialize<ReadyEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
                         State.Account = data.Account;
-                        State.Channels = data.Channels;
-                        State.Relations = data.Relations;
-                        try
+                        State.Relations = new ConcurrentDictionary<string, RestRelation>(data.Relations);
+                        State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers.ToDictionary(x => x.Key, x => new SocketServerState(x.Value)));
+
+                        Dictionary<string, RestEmoji> Emojis = new Dictionary<string, RestEmoji>();
+                        Dictionary<string, RestChannel> Channels = new Dictionary<string, RestChannel>();
+                        Dictionary<string, RestRole> Roles = new Dictionary<string, RestRole>();
+
+                        foreach (var i in data.Servers.Values)
                         {
-                            State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers.ToDictionary(x => x.Id, x => new SocketServerState
+                            foreach (var e in i.Emojis)
                             {
-                                Server = x,
-                                Channels = new ConcurrentDictionary<string, RestChannel>(State.Channels[x.Id].ToDictionary(x => x.Id, x => x))
-                            }));
+                                Emojis.TryAdd(e.Key, e.Value);
+                            }
+                            foreach (var c in i.Channels)
+                            {
+                                Channels.TryAdd(c.Key, c.Value);
+                            }
+                            foreach (var r in i.Roles)
+                            {
+                                Roles.TryAdd(r.Key, r.Value);
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
-                        Console.WriteLine("Test");
+                        State.Emojis = new ConcurrentDictionary<string, RestEmoji>(Emojis);
+                        State.Channels = new ConcurrentDictionary<string, RestChannel>(Channels);
+                        State.Roles = new ConcurrentDictionary<string, RestRole>(Roles);
+
                         foreach (var i in State.Servers.Values)
                         {
                             State.TriggerAddServer(i.Server);
@@ -185,6 +200,9 @@ public class LunarSocketClient
                 case "message_create":
                     {
                         MessageCreateEvent? data = payload.Deserialize<MessageCreateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
                         TriggerMessage(data);
 
                     }
@@ -192,6 +210,9 @@ public class LunarSocketClient
                 case "message_update":
                     {
                         MessageUpdateEvent? data = payload.Deserialize<MessageUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
                         _ = State.OnMessageEdit?.Invoke(new RestMessage
                         {
                             Author = data.Author,
@@ -206,23 +227,27 @@ public class LunarSocketClient
                 case "message_delete":
                     {
                         MessageDeleteEvent? data = payload.Deserialize<MessageDeleteEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
                         _ = State.OnMessageDelete?.Invoke(data.Message);
                     }
                     break;
                 case "server_create":
                     {
                         ServerCreateEvent? data = payload.Deserialize<ServerCreateEvent>(JsonOptions);
-                        State.Servers.TryAdd(data.Server.Id, new SocketServerState
+                        if (data == null)
+                            return;
+
+                        State.Servers.TryAdd(data.Server.Id, new SocketServerState(new ServerState
                         {
                             Server = data.Server,
                             Channels = new ConcurrentDictionary<string, RestChannel>(data.Channels)
-                        });
-                        var channels = new List<RestChannel>();
-                        foreach (var i in data.Channels)
+                        }));
+                        foreach (var c in data.Channels)
                         {
-                            channels.Add(i.Value);
+                            State.Channels.TryAdd(c.Key, c.Value);
                         }
-                        State.Channels.TryAdd(data.Server.Id, channels);
                         State.TriggerAddServer(data.Server);
                     }
                     break;
@@ -230,63 +255,127 @@ public class LunarSocketClient
                 case "server_delete":
                     {
                         ServerDeleteEvent? data = payload.Deserialize<ServerDeleteEvent>(JsonOptions);
-                        State.TriggerDeleteServer(State.Servers[data.ServerId].Server);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        State.TriggerDeleteServer(server.Server);
                         State.Servers.TryRemove(data.ServerId, out _);
-                        State.Channels.TryRemove(data.ServerId, out _);
+                        foreach (var c in server.Channels)
+                        {
+                            State.Channels.TryRemove(c.Key, out _);
+                        }
+                        foreach (var r in server.Roles)
+                        {
+                            State.Roles.TryRemove(r.Key, out _);
+                        }
+                        foreach (var e in server.Emojis)
+                        {
+                            State.Emojis.TryRemove(e.Key, out _);
+                        }
                     }
                     break;
                 case "channel_create":
                     {
                         ChannelCreateEvent? data = payload.Deserialize<ChannelCreateEvent>(JsonOptions);
-                        State.Servers[data.Channel.ServerId].Channels.TryAdd(data.Channel.Id, data.Channel);
-                        State.Channels[data.Channel.ServerId].Add(data.Channel);
-                        if (State.CurrentServer.Server.Id == data.Channel.ServerId)
-                            State.CurrentServer.OnChannelCreate.Invoke(data.Channel);
+                        if (data == null)
+                            return;
+
+                        if (data.Channel.Type == Core.Channels.ChannelType.Direct || data.Channel.Type == Core.Channels.ChannelType.Group)
+                        {
+                            State.Channels.TryAdd(data.Channel.Id, data.Channel);
+                        }
+                        else
+                        {
+                            if (!State.Servers.TryGetValue(data.Channel.ServerId, out var server))
+                                return;
+
+                            server.Channels.TryAdd(data.Channel.Id, data.Channel);
+                            State.Channels.TryAdd(data.Channel.Id, data.Channel);
+                            if (State.CurrentServer != null && State.CurrentServer.Server.Id == data.Channel.ServerId)
+                                State.CurrentServer.OnChannelCreate?.Invoke(data.Channel);
+                        }
                     }
                     break;
                 case "channel_delete":
                     {
                         ChannelDeleteEvent? data = payload.Deserialize<ChannelDeleteEvent>(JsonOptions);
-                        var channel = State.Channels[data.ServerId].FirstOrDefault(x => x.Id == data.ChannelId);
-                        State.Servers[data.ServerId].Channels.TryRemove(data.ChannelId, out channel);
-                        State.Channels[data.ServerId].Remove(channel);
-                        if (State.CurrentServer.Server.Id == channel.ServerId)
-                            State.CurrentServer.OnChannelDelete.Invoke(channel);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        if (channel.Type == Core.Channels.ChannelType.Direct || channel.Type == Core.Channels.ChannelType.Group)
+                        {
+                            State.Channels.TryRemove(channel.Id, out _);
+                        }
+                        else
+                        {
+                            if (State.Servers.TryGetValue(channel.ServerId, out var server))
+                                server.Channels.TryRemove(channel.Id, out _);
+
+                            State.Channels.TryRemove(channel.Id, out _);
+                        }
+                        if (State.CurrentServer != null && State.CurrentServer.Server.Id == channel.ServerId)
+                            State.CurrentServer.OnChannelDelete?.Invoke(channel);
                     }
                     break;
                 case "channel_update":
                     {
                         ChannelUpdateEvent? data = payload.Deserialize<ChannelUpdateEvent>(JsonOptions);
-                        var channel = State.Channels[data.ServerId].FirstOrDefault(x => x.Id == data.ChannelId);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
                         channel.Name = data.Name;
                         channel.Topic = data.Topic;
-                        if (State.CurrentServer.Server.Id == channel.ServerId)
-                            State.CurrentServer.OnChannelUpdate.Invoke(channel);
+                        if (State.CurrentServer != null && State.CurrentServer.Server.Id == channel.ServerId)
+                            State.CurrentServer.OnChannelUpdate?.Invoke(channel);
                     }
                     break;
                 case "account_relation_create":
                     {
                         RelationCreateEvent? data = payload.Deserialize<RelationCreateEvent>(JsonOptions);
-                        State.Relations.Add(data.Relation.UserId, data.Relation);
-                        State.OnRelationAdd.Invoke(data.Relation);
+                        if (data == null)
+                            return;
+
+                        if (data.Relation == null || !State.Relations.TryAdd(data.Relation.UserId, data.Relation))
+                            return;
+
+                        State.OnRelationAdd?.Invoke(data.Relation);
                     }
                     break;
                 case "account_relation_delete":
                     {
                         RelationDeleteEvent? data = payload.Deserialize<RelationDeleteEvent>(JsonOptions);
-                        State.Relations.Remove(data.UserId, out var relation);
-                        State.OnRelationRemove.Invoke(relation);
+                        if (data == null)
+                            return;
+
+                        if (!State.Relations.TryRemove(data.UserId, out var relation))
+                            return;
+
+                        State.OnRelationRemove?.Invoke(relation);
                     }
                     break;
                 case "account_relation_update":
                     {
                         RelationUpdateEvent? data = payload.Deserialize<RelationUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
                     }
                     break;
                 case "account_update":
                     {
                         AccountUpdateEvent? data = payload.Deserialize<AccountUpdateEvent>(JsonOptions);
-                        State.OnAccountUpdate.Invoke(data);
+                        if (data == null)
+                            return;
+
+                        State.OnAccountUpdate?.Invoke(data);
                     }
                     break;
             }

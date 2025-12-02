@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Rest.Channels;
 using LunarChatSharp.Rest.Messages;
+using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
@@ -16,9 +17,10 @@ public class SocketState
     public SocketServerState? CurrentServer;
     public RestChannel? CurrentChannel;
     public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
-    public ConcurrentDictionary<string, List<RestChannel>> Channels = new ConcurrentDictionary<string, List<RestChannel>>();
-
-    public Dictionary<string, RestRelation> Relations = new Dictionary<string, RestRelation>();
+    public ConcurrentDictionary<string, RestChannel> Channels = new ConcurrentDictionary<string, RestChannel>();
+    public ConcurrentDictionary<string, RestEmoji> Emojis = new ConcurrentDictionary<string, RestEmoji>();
+    public ConcurrentDictionary<string, RestRole> Roles = new ConcurrentDictionary<string, RestRole>();
+    public ConcurrentDictionary<string, RestRelation> Relations = new ConcurrentDictionary<string, RestRelation>();
 
     public delegate void ServerEventHandler(RestServer server);
 
@@ -60,10 +62,22 @@ public class SocketState
 }
 public class SocketServerState
 {
+    public SocketServerState(ServerState server)
+    {
+        Server = server.Server;
+        Channels = server.Channels;
+        Roles = server.Roles;
+        Emojis = server.Emojis;
+    }
+    public RestServer Server { get; set; }
+
+    public ConcurrentDictionary<string, RestChannel> Channels;
+    public ConcurrentDictionary<string, RestRole> Roles;
+    public ConcurrentDictionary<string, RestEmoji> Emojis;
+
     public Func<RestChannel, Task> OnChannelCreate;
     public Func<RestChannel, Task> OnChannelDelete;
     public Func<RestChannel, Task> OnChannelUpdate;
-    public RestServer Server;
-    public ConcurrentDictionary<string, RestChannel> Channels = new ConcurrentDictionary<string, RestChannel>();
-    public ConcurrentDictionary<string, List<RestMessage>> Messages = new ConcurrentDictionary<string, List<RestMessage>>();
+
+    //public ConcurrentDictionary<string, List<RestMessage>> Messages = new ConcurrentDictionary<string, List<RestMessage>>();
 }
