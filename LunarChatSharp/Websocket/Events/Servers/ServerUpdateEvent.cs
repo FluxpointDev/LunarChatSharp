@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace LunarChatSharp.Websocket.Events;
+namespace LunarChatSharp.Websocket.Events.Servers;
 
 public class ServerUpdateEvent : ISocketEvent
 {

@@ -3,6 +3,11 @@ using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
+using LunarChatSharp.Websocket.Events.Account;
+using LunarChatSharp.Websocket.Events.Channels;
+using LunarChatSharp.Websocket.Events.Messages;
+using LunarChatSharp.Websocket.Events.Roles;
+using LunarChatSharp.Websocket.Events.Servers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net.WebSockets;
@@ -251,7 +256,24 @@ public class LunarSocketClient
                         State.TriggerAddServer(data.Server);
                     }
                     break;
+                case "server_update":
+                    {
+                        ServerUpdateEvent? data = payload.Deserialize<ServerUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
 
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (data.Name != null)
+                            server.Server.Name = data.Name;
+
+                        if (data.Description != null)
+                            server.Server.Description = data.Description;
+
+                        State.OnServerUpdate?.Invoke(data);
+                    }
+                    break;
                 case "server_delete":
                     {
                         ServerDeleteEvent? data = payload.Deserialize<ServerDeleteEvent>(JsonOptions);
@@ -275,6 +297,54 @@ public class LunarSocketClient
                         {
                             State.Emojis.TryRemove(e.Key, out _);
                         }
+                    }
+                    break;
+                case "role_create":
+                    {
+                        RoleCreateEvent? data = payload.Deserialize<RoleCreateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Roles.TryAdd(data.Role.Id, data.Role))
+                            return;
+
+                        State.Roles.TryAdd(data.Role.Id, data.Role);
+
+                        State.OnRoleCreate?.Invoke(server.Server, data.Role);
+                    }
+                    break;
+                case "role_update":
+                    {
+                        RoleUpdateEvent? data = payload.Deserialize<RoleUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Roles.TryGetValue(data.RoleId, out var role))
+                            return;
+
+                        if (data.Name != null)
+                            role.Name = data.Name;
+
+                        State.OnRoleUpdate?.Invoke(data, role);
+                    }
+                    break;
+                case "role_delete":
+                    {
+                        RoleDeleteEvent? data = payload.Deserialize<RoleDeleteEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+
+                        if (!State.Roles.TryRemove(data.RoleId, out var role))
+                            return;
+
+                        if (State.Servers.TryGetValue(data.ServerId, out var server))
+                            server.Roles.TryRemove(data.RoleId, out _);
+
+                        State.OnRoleDelete?.Invoke(role);
                     }
                     break;
                 case "channel_create":

@@ -4,6 +4,9 @@ using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
+using LunarChatSharp.Websocket.Events.Account;
+using LunarChatSharp.Websocket.Events.Roles;
+using LunarChatSharp.Websocket.Events.Servers;
 using System.Collections.Concurrent;
 
 namespace LunarChatSharp.Websocket;
@@ -30,6 +33,7 @@ public class SocketState
 
     public event ServerEventHandler? OnAddServer;
     public event ServerEventHandler? OnRemoveServer;
+    public Func<ServerUpdateEvent, Task>? OnServerUpdate;
     public event ServerEventHandler? OnSelectServer;
     public event ChannelEventHandler? OnSelectChannel;
 
@@ -40,6 +44,10 @@ public class SocketState
     public Func<RestMessage, Task>? OnMessageDelete;
     public Func<RestUserPresence, Task>? OnPresenceUpdate;
     public Func<AccountUpdateEvent, Task>? OnAccountUpdate;
+
+    public Func<RestServer, RestRole, Task>? OnRoleCreate;
+    public Func<RoleUpdateEvent, RestRole, Task>? OnRoleUpdate;
+    public Func<RestRole, Task>? OnRoleDelete;
     public void TriggerAddServer(RestServer server)
     {
         OnAddServer?.Invoke(server);

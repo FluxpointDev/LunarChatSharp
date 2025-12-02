@@ -1,7 +1,7 @@
 ﻿using LunarChatSharp.Rest.Messages;
 using System.Text.Json.Serialization;
 
-namespace LunarChatSharp.Websocket.Events;
+namespace LunarChatSharp.Websocket.Events.Messages;
 
 public class MessageCreateEvent : ISocketEvent
 {

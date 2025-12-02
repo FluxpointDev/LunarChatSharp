@@ -2,7 +2,7 @@
 using LunarChatSharp.Rest.Servers;
 using System.Text.Json.Serialization;
 
-namespace LunarChatSharp.Websocket.Events;
+namespace LunarChatSharp.Websocket.Events.Servers;
 
 public class ServerCreateEvent : ISocketEvent
 {
