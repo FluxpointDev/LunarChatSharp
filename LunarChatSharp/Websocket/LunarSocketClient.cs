@@ -158,16 +158,17 @@ public class LunarSocketClient
                         ReadyEvent? data = payload.Deserialize<ReadyEvent>(JsonOptions);
                         if (data == null)
                             return;
-
-                        State.Account = data.Account;
-                        State.Relations = new ConcurrentDictionary<string, RestRelation>(data.Relations);
-                        State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers.ToDictionary(x => x.Key, x => new SocketServerState(x.Value)));
+                        State.LunarCommunityId = data.LunarCommunityId!;
+                        State.LunarDevId = data.LunarDevId!;
+                        State.Account = data.Account!;
+                        State.Relations = new ConcurrentDictionary<string, RestRelation>(data.Relations!);
+                        State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers!.ToDictionary(x => x.Key, x => new SocketServerState(x.Value, data.Members![x.Key])));
 
                         Dictionary<string, RestEmoji> Emojis = new Dictionary<string, RestEmoji>();
                         Dictionary<string, RestChannel> Channels = new Dictionary<string, RestChannel>();
                         Dictionary<string, RestRole> Roles = new Dictionary<string, RestRole>();
 
-                        foreach (var i in data.Servers.Values)
+                        foreach (var i in data.Servers!.Values)
                         {
                             foreach (var e in i.Emojis)
                             {
@@ -234,11 +235,11 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        State.Servers.TryAdd(data.Server.Id, new SocketServerState(new ServerState
+                        State.Servers.TryAdd(data.Server!.Id, new SocketServerState(new ServerState
                         {
                             Server = data.Server,
                             Channels = new ConcurrentDictionary<string, RestChannel>(data.Channels)
-                        }));
+                        }, data.Member!));
                         foreach (var c in data.Channels)
                         {
                             State.Channels.TryAdd(c.Key, c.Value);

@@ -22,16 +22,28 @@ public class ReadyEvent : ISocketEvent
     public string Type { get; set; } = "ready";
 
     [JsonPropertyName("account")]
-    public RestAccount? Account { get; set; }
+    public required RestAccount? Account { get; set; }
 
     [JsonPropertyName("servers")]
-    public ConcurrentDictionary<string, ServerState> Servers { get; set; }
+    public required ConcurrentDictionary<string, ServerState>? Servers { get; set; }
+
+    [JsonPropertyName("members")]
+    public required ConcurrentDictionary<string, RestMember>? Members { get; set; }
 
     [JsonPropertyName("relations")]
-    public Dictionary<string, RestRelation> Relations { get; set; }
+    public required Dictionary<string, RestRelation>? Relations { get; set; }
+
+    [JsonPropertyName("community_server_id")]
+    public required string? LunarCommunityId { get; set; }
+
+    [JsonPropertyName("dev_server_id")]
+    public required string? LunarDevId { get; set; }
 }
 public class ServerState
 {
+    [JsonIgnore]
+    public ConcurrentDictionary<string, RestMember> Members = new ConcurrentDictionary<string, RestMember>();
+
     [JsonPropertyName("server")]
     public RestServer Server { get; set; }
 

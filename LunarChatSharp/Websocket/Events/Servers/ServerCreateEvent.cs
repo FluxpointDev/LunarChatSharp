@@ -12,6 +12,9 @@ public class ServerCreateEvent : ISocketEvent
     [JsonPropertyName("server")]
     public required RestServer? Server { get; set; }
 
+    [JsonPropertyName("member")]
+    public required RestMember? Member { get; set; }
+
     [JsonPropertyName("channels")]
     public required Dictionary<string, RestChannel> Channels { get; set; }
 }

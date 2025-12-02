@@ -19,6 +19,9 @@ public class SocketState
     public RestAccount Account;
     public SocketServerState? CurrentServer;
     public RestChannel? CurrentChannel;
+    public string LunarCommunityId = null!;
+    public string LunarDevId = null!;
+
     public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
     public ConcurrentDictionary<string, RestChannel> Channels = new ConcurrentDictionary<string, RestChannel>();
     public ConcurrentDictionary<string, RestEmoji> Emojis = new ConcurrentDictionary<string, RestEmoji>();
@@ -30,7 +33,7 @@ public class SocketState
     public Func<RestServer, Task>? OnAddServer;
     public Func<RestServer, Task>? OnRemoveServer;
     public Func<ServerUpdateEvent, Task>? OnServerUpdate;
-    public Func<RestServer, Task>? OnSelectServer;
+    public Func<RestServer?, Task>? OnSelectServer;
     public Func<RestChannel, RestRelation, Task>? OnSelectChannel;
 
     public Func<RestRelation, Task>? OnRelationAdd;
@@ -47,14 +50,16 @@ public class SocketState
 }
 public class SocketServerState
 {
-    public SocketServerState(ServerState server)
+    public SocketServerState(ServerState server, RestMember member)
     {
         Server = server.Server;
+        Member = member;
         Channels = server.Channels;
         Roles = server.Roles;
         Emojis = server.Emojis;
     }
-    public RestServer Server { get; set; }
+    public RestServer Server;
+    public RestMember Member;
 
     public ConcurrentDictionary<string, RestChannel> Channels;
     public ConcurrentDictionary<string, RestRole> Roles;
