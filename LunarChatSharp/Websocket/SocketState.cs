@@ -2,6 +2,7 @@
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
+using LunarChatSharp.Websocket.Events;
 using System.Collections.Concurrent;
 
 namespace LunarChatSharp.Websocket;
@@ -11,6 +12,7 @@ public class SocketState
     public bool APIEnabled = true;
     public LunarSocketClient? WebSocket;
     public string? CurrentId;
+    public RestAccount Account;
     public SocketServerState? CurrentServer;
     public RestChannel? CurrentChannel;
     public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
@@ -35,6 +37,7 @@ public class SocketState
     public Func<RestMessage, Task>? OnMessageEdit;
     public Func<RestMessage, Task>? OnMessageDelete;
     public Func<RestUserPresence, Task>? OnPresenceUpdate;
+    public Func<AccountUpdateEvent, Task>? OnAccountUpdate;
     public void TriggerAddServer(RestServer server)
     {
         OnAddServer?.Invoke(server);

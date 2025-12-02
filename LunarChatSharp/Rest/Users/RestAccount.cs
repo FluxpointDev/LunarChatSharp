@@ -9,4 +9,7 @@ public class RestAccount
 
     [JsonPropertyName("email")]
     public required string Email { get; set; }
+
+    [JsonPropertyName("private_channels")]
+    public required Dictionary<string, string> PrivateChannels;
 }

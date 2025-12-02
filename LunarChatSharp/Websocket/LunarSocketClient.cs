@@ -160,6 +160,7 @@ public class LunarSocketClient
                     {
                         _firstConnected = false;
                         ReadyEvent? data = payload.Deserialize<ReadyEvent>(JsonOptions);
+                        State.Account = data.Account;
                         State.Channels = data.Channels;
                         State.Relations = data.Relations;
                         try
@@ -280,6 +281,12 @@ public class LunarSocketClient
                 case "account_relation_update":
                     {
                         RelationUpdateEvent? data = payload.Deserialize<RelationUpdateEvent>(JsonOptions);
+                    }
+                    break;
+                case "account_update":
+                    {
+                        AccountUpdateEvent? data = payload.Deserialize<AccountUpdateEvent>(JsonOptions);
+                        State.OnAccountUpdate.Invoke(data);
                     }
                     break;
             }

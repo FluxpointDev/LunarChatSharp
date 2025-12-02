@@ -20,6 +20,9 @@ public class ReadyEvent : ISocketEvent
     [JsonPropertyName("type")]
     public string Type { get; set; } = "ready";
 
+    [JsonPropertyName("account")]
+    public RestAccount? Account { get; set; }
+
     [JsonPropertyName("servers")]
     public RestServer[] Servers { get; set; }
 
