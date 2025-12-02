@@ -26,17 +26,7 @@ public class LunarSocketClient
         State.WebSocket = this;
     }
 
-    public delegate void MessageEventHandler(MessageCreateEvent message);
-    public delegate void ServerJoinEventHandler(ServerCreateEvent server);
     public SocketState State = new SocketState();
-
-    public event MessageEventHandler? OnMessageRecieved;
-    public void TriggerMessage(MessageCreateEvent message)
-    {
-        OnMessageRecieved?.Invoke(message);
-    }
-
-
 
     private string webSocketUrl;
     private string authId;
@@ -198,7 +188,7 @@ public class LunarSocketClient
 
                         foreach (var i in State.Servers.Values)
                         {
-                            State.TriggerAddServer(i.Server);
+                            State.OnAddServer?.Invoke(i.Server);
                         }
                     }
                     break;
@@ -208,7 +198,7 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        TriggerMessage(data);
+                        State.OnMessageRecieved?.Invoke(data.Message);
 
                     }
                     break;
@@ -253,7 +243,8 @@ public class LunarSocketClient
                         {
                             State.Channels.TryAdd(c.Key, c.Value);
                         }
-                        State.TriggerAddServer(data.Server);
+
+                        State.OnAddServer?.Invoke(data.Server);
                     }
                     break;
                 case "server_update":
@@ -283,7 +274,7 @@ public class LunarSocketClient
                         if (!State.Servers.TryGetValue(data.ServerId, out var server))
                             return;
 
-                        State.TriggerDeleteServer(server.Server);
+                        State.OnRemoveServer?.Invoke(server.Server);
                         State.Servers.TryRemove(data.ServerId, out _);
                         foreach (var c in server.Channels)
                         {

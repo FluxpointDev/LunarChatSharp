@@ -25,17 +25,13 @@ public class SocketState
     public ConcurrentDictionary<string, RestRole> Roles = new ConcurrentDictionary<string, RestRole>();
     public ConcurrentDictionary<string, RestRelation> Relations = new ConcurrentDictionary<string, RestRelation>();
 
-    public delegate void ServerEventHandler(RestServer server);
 
-    public delegate void ChannelEventHandler(RestChannel channel, RestRelation user);
-    public delegate void EventHandler();
-
-
-    public event ServerEventHandler? OnAddServer;
-    public event ServerEventHandler? OnRemoveServer;
+    public Func<RestMessage, Task>? OnMessageRecieved;
+    public Func<RestServer, Task>? OnAddServer;
+    public Func<RestServer, Task>? OnRemoveServer;
     public Func<ServerUpdateEvent, Task>? OnServerUpdate;
-    public event ServerEventHandler? OnSelectServer;
-    public event ChannelEventHandler? OnSelectChannel;
+    public Func<RestServer, Task>? OnSelectServer;
+    public Func<RestChannel, RestRelation, Task>? OnSelectChannel;
 
     public Func<RestRelation, Task>? OnRelationAdd;
     public Func<RestRelation, Task>? OnRelationRemove;
@@ -48,25 +44,6 @@ public class SocketState
     public Func<RestServer, RestRole, Task>? OnRoleCreate;
     public Func<RoleUpdateEvent, RestRole, Task>? OnRoleUpdate;
     public Func<RestRole, Task>? OnRoleDelete;
-    public void TriggerAddServer(RestServer server)
-    {
-        OnAddServer?.Invoke(server);
-    }
-
-    public void TriggerDeleteServer(RestServer server)
-    {
-        OnRemoveServer?.Invoke(server);
-    }
-
-    public void TriggerSelectServer(RestServer server)
-    {
-        OnSelectServer?.Invoke(server);
-    }
-
-    public void TriggerSelectChannel(RestChannel channel, RestRelation? user)
-    {
-        OnSelectChannel?.Invoke(channel, user);
-    }
 }
 public class SocketServerState
 {
