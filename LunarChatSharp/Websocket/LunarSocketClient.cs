@@ -319,6 +319,9 @@ public class LunarSocketClient
                         if (data.Name != null)
                             role.Name = data.Name;
 
+                        if (data.Color != null)
+                            role.Color = data.Color;
+
                         State.OnRoleUpdate?.Invoke(data, role);
                     }
                     break;
