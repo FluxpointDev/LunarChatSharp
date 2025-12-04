@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Core.Servers;
 using LunarChatSharp.Rest.Channels;
+using LunarChatSharp.Rest.Dev;
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
@@ -44,6 +45,9 @@ public class ServerState
 {
     [JsonIgnore]
     public ConcurrentDictionary<string, RestMember> Members = new ConcurrentDictionary<string, RestMember>();
+
+    [JsonIgnore]
+    public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();
 
     [JsonPropertyName("server")]
     public RestServer Server { get; set; }

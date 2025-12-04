@@ -6,10 +6,22 @@ namespace LunarChatSharp;
 
 public static class DevHelpers
 {
+    public static async Task AddAppAsync(this LunarRestClient rest, string serverId, string appId)
+    {
+        await rest.PutAsync($"/servers/{serverId}/apps", new InviteAppRequest
+        {
+            AppId = appId,
+        });
+    }
+
+    public static async Task RemoveAppAsync(this LunarRestClient rest, string serverId, string appId)
+    {
+        await rest.DeleteAppAsync($"/servers/{serverId}/apps/{appId}");
+    }
+
     public static async Task EditAppAsync(this LunarRestClient rest, string appId, CreateAppRequest request)
     {
         await rest.PatchAsync($"/apps/{appId}", request);
-
     }
 
     public static async Task<RestApp> CreateAppAsync(this LunarRestClient rest, CreateAppRequest request)
