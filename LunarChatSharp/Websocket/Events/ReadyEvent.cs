@@ -1,4 +1,5 @@
-﻿using LunarChatSharp.Rest.Channels;
+﻿using LunarChatSharp.Core.Servers;
+using LunarChatSharp.Rest.Channels;
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
@@ -58,4 +59,68 @@ public class ServerState
 
     [JsonPropertyName("emojis")]
     public ConcurrentDictionary<string, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<string, RestEmoji>();
+
+    public bool HasPermission(RestMember member, ServerPermission permission)
+    {
+        if (Server.DefaultPermissions.ServerPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+            return true;
+
+        if (member.Roles != null)
+        {
+            foreach (var i in member.Roles)
+            {
+                if (Roles.TryGetValue(i, out var role) && role.Permissions.ServerPermissions.HasFlag(permission))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPermission(RestMember member, ModPermission permission)
+    {
+        if (Server.DefaultPermissions.ModPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+            return true;
+
+        if (member.Roles != null)
+        {
+            foreach (var i in member.Roles)
+            {
+                if (Roles.TryGetValue(i, out var role) && role.Permissions.ModPermissions.HasFlag(permission))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPermission(RestMember member, ChannelPermission permission)
+    {
+        if (Server.DefaultPermissions.ChannelPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+            return true;
+
+        if (member.Roles != null)
+        {
+            foreach (var i in member.Roles)
+            {
+                if (Roles.TryGetValue(i, out var role) && role.Permissions.ChannelPermissions.HasFlag(permission))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool HasPermission(RestMember member, VoicePermission permission)
+    {
+        if (Server.DefaultPermissions.VoicePermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+            return true;
+
+        if (member.Roles != null)
+        {
+            foreach (var i in member.Roles)
+            {
+                if (Roles.TryGetValue(i, out var role) && role.Permissions.VoicePermissions.HasFlag(permission))
+                    return true;
+            }
+        }
+        return false;
+    }
 }

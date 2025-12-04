@@ -14,6 +14,7 @@ public class SocketServer : RestServer
             Description = data.Description,
             OwnerId = data.OwnerId,
             SystemMessages = data.SystemMessages,
+            DefaultPermissions = data.DefaultPermissions,
         };
 
         return server;

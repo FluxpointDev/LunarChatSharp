@@ -14,8 +14,9 @@ public class RestMember
     public string? Nickname { get; set; }
 
     [JsonPropertyName("roles")]
-    public required List<string>? Roles { get; set; }
+    public required HashSet<string>? Roles { get; set; }
 
     [JsonPropertyName("timeout")]
     public DateTime? Timeout { get; set; }
+
 }

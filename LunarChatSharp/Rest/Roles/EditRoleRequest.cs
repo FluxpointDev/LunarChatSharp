@@ -9,4 +9,7 @@ public class EditRoleRequest : ILunarRequest
 
     [JsonPropertyName("color")]
     public string? Color { get; set; }
+
+    [JsonPropertyName("permissions")]
+    public RestPermissions? Permissions { get; set; }
 }

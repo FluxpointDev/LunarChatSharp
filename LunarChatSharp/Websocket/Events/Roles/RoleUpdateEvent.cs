@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Rest.Roles;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Websocket.Events.Roles;
 
@@ -15,4 +16,7 @@ public class RoleUpdateEvent : ISocketEvent
 
     [JsonPropertyName("color")]
     public string? Color { get; set; }
+
+    [JsonPropertyName("permissions")]
+    public RestPermissions? Permissions { get; set; }
 }

@@ -263,6 +263,9 @@ public class LunarSocketClient
                         if (data.Description != null)
                             server.Server.Description = data.Description;
 
+                        if (data.DefaultPermissions != null)
+                            server.Server.DefaultPermissions = data.DefaultPermissions;
+
                         State.OnServerUpdate?.Invoke(data);
                     }
                     break;
@@ -322,6 +325,9 @@ public class LunarSocketClient
 
                         if (data.Color != null)
                             role.Color = data.Color;
+
+                        if (data.Permissions != null)
+                            role.Permissions = data.Permissions;
 
                         State.OnRoleUpdate?.Invoke(data, role);
                     }
