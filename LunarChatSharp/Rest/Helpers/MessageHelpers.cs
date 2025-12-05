@@ -13,9 +13,20 @@ public static class MessageHelpers
 
         return messages;
     }
-    public static async Task SendMesssageAsync(this LunarRestClient rest, string channelId, CreateMessageRequest request)
+
+    public static async Task<RestMessage?> GetMessageAsync(this LunarRestClient rest, string channelId, string messageId)
     {
-        await rest.PostAsync($"/channels/{channelId}/messages", request);
+        return await rest.GetAsync<RestMessage>($"/channels/{channelId}/messages/{messageId}");
+    }
+
+    public static async Task<RestMessage> SendMesssageAsync(this LunarRestClient rest, string channelId, CreateMessageRequest request)
+    {
+        return await rest.PostAsync<RestMessage>($"/channels/{channelId}/messages", request);
+    }
+
+    public static async Task<RestMessage> EditMesssageAsync(this LunarRestClient rest, string channelId, EditMessageRequest request)
+    {
+        return await rest.PatchAsync<RestMessage>($"/channels/{channelId}/messages", request);
     }
 
     public static async Task DeleteMessageAsync(this LunarRestClient rest, string channelId, string messageId)

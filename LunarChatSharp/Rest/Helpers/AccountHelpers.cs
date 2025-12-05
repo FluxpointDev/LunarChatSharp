@@ -15,7 +15,7 @@ public static class AccountHelpers
 
     public static async Task AccountEditUsername(this LunarRestClient rest, string username)
     {
-        await rest.PatchAsync($"/accounts/@me/displayname", new EditUsernameRequest
+        await rest.PatchAsync($"/accounts/@me/username", new EditUsernameRequest
         {
             Username = username
         });

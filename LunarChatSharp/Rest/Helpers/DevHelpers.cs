@@ -6,7 +6,7 @@ namespace LunarChatSharp;
 
 public static class DevHelpers
 {
-    public static async Task AddAppAsync(this LunarRestClient rest, string serverId, string appId)
+    public static async Task AddServerAppAsync(this LunarRestClient rest, string serverId, string appId)
     {
         await rest.PutAsync($"/servers/{serverId}/apps", new InviteAppRequest
         {
@@ -14,14 +14,14 @@ public static class DevHelpers
         });
     }
 
-    public static async Task RemoveAppAsync(this LunarRestClient rest, string serverId, string appId)
+    public static async Task RemoveServerAppAsync(this LunarRestClient rest, string serverId, string appId)
     {
-        await rest.DeleteAppAsync($"/servers/{serverId}/apps/{appId}");
+        await rest.DeleteAsync($"/servers/{serverId}/apps/{appId}");
     }
 
-    public static async Task EditAppAsync(this LunarRestClient rest, string appId, CreateAppRequest request)
+    public static async Task<RestApp> EditAppAsync(this LunarRestClient rest, string appId, CreateAppRequest request)
     {
-        await rest.PatchAsync($"/apps/{appId}", request);
+        return await rest.PatchAsync<RestApp>($"/apps/{appId}", request);
     }
 
     public static async Task<RestApp> CreateAppAsync(this LunarRestClient rest, CreateAppRequest request)
@@ -34,9 +34,19 @@ public static class DevHelpers
         return await rest.PostAsync<RestTeam>("/teams", request);
     }
 
-    public static async Task EditTeamAsync(this LunarRestClient rest, string teamId, CreateTeamRequest request)
+    public static async Task<RestTeam> EditTeamAsync(this LunarRestClient rest, string teamId, CreateTeamRequest request)
     {
-        await rest.PatchAsync($"/teams/{teamId}", request);
+        return await rest.PatchAsync<RestTeam>($"/teams/{teamId}", request);
+    }
+
+    public static async Task<RestApp?> GetAppAsync(this LunarRestClient rest, string appId)
+    {
+        return await rest.GetAsync<RestApp>($"/apps/{appId}");
+    }
+
+    public static async Task<RestTeam?> GetTeamAsync(this LunarRestClient rest, string teamId)
+    {
+        return await rest.GetAsync<RestTeam>($"/teams/{teamId}");
     }
 
     public static async Task DeleteAppAsync(this LunarRestClient rest, string appId)
@@ -51,6 +61,6 @@ public static class DevHelpers
 
     public static async Task<RestDev> GetDevAsync(this LunarRestClient rest)
     {
-        return await rest.GetAsync<RestDev>("/users/@me/dev", throwGetRequest: true);
+        return (await rest.GetAsync<RestDev>("/accounts/@me/dev", throwGetRequest: true))!;
     }
 }

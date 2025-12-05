@@ -5,14 +5,19 @@ namespace LunarChatSharp;
 
 public static class ChannelHelpers
 {
-    public static async Task CreateChannelAsync(this LunarRestClient rest, CreateChannelRequest request)
+    public static async Task<RestChannel> CreateChannelAsync(this LunarRestClient rest, CreateChannelRequest request)
     {
-        await rest.PostAsync($"/channels", request);
+        return await rest.PostAsync<RestChannel>($"/channels", request);
     }
 
-    public static async Task UpdateChannelAsync(this LunarRestClient rest, string channelId, UpdateChannelRequest request)
+    public static async Task<RestChannel?> GetChannelAsync(this LunarRestClient rest, string channelId)
     {
-        await rest.PatchAsync($"/channels/{channelId}", request);
+        return await rest.GetAsync<RestChannel>($"/channels/{channelId}");
+    }
+
+    public static async Task<RestChannel> UpdateChannelAsync(this LunarRestClient rest, string channelId, UpdateChannelRequest request)
+    {
+        return await rest.PatchAsync<RestChannel>($"/channels/{channelId}", request);
     }
 
     public static async Task DeleteChannelAsync(this LunarRestClient rest, string channelId, DeleteChannelRequest request)
