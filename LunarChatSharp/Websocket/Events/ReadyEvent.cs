@@ -46,7 +46,7 @@ public class ServerState
     [JsonIgnore]
     public ConcurrentDictionary<string, RestMember> Members = new ConcurrentDictionary<string, RestMember>();
 
-    [JsonIgnore]
+    [JsonPropertyName("apps")]
     public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();
 
     [JsonPropertyName("server")]

@@ -2,14 +2,14 @@
 
 namespace LunarChatSharp.Websocket.Events.Servers;
 
-public class MemberUpdateEvent : ISocketEvent
+public class EmojiDeleteEvent : ISocketEvent
 {
     [JsonPropertyName("type")]
-    public string Type { get; set; } = "member_update";
+    public string Type { get; set; } = "emoji_delete";
 
     [JsonPropertyName("server_id")]
     public required string? ServerId { get; set; }
 
-    [JsonPropertyName("roles")]
-    public List<string>? Roles { get; set; }
+    [JsonPropertyName("emoji_id")]
+    public required string? EmojiId { get; set; }
 }

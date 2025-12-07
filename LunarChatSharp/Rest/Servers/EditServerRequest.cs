@@ -13,4 +13,7 @@ public class EditServerRequest : ILunarRequest
 
     [JsonPropertyName("default_permissions")]
     public RestPermissions? DefaultPermissions { get; set; }
+
+    [JsonPropertyName("system_messages")]
+    public RestServerSystemMessages? SystemMessages { get; set; }
 }

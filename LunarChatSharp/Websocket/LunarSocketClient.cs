@@ -167,7 +167,6 @@ public class LunarSocketClient
                         Dictionary<string, RestEmoji> Emojis = new Dictionary<string, RestEmoji>();
                         Dictionary<string, RestChannel> Channels = new Dictionary<string, RestChannel>();
                         Dictionary<string, RestRole> Roles = new Dictionary<string, RestRole>();
-
                         foreach (var i in data.Servers!.Values)
                         {
                             foreach (var e in i.Emojis)
@@ -199,7 +198,10 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        State.OnMessageRecieved?.Invoke(data.Message);
+                        if (!State.Channels.TryGetValue(data.Message.ChannelId, out var channel))
+                            return;
+
+                        State.OnMessageRecieved?.Invoke(channel, data.Message);
 
                     }
                     break;
@@ -209,7 +211,10 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        _ = State.OnMessageEdit?.Invoke(new RestMessage
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        _ = State.OnMessageEdit?.Invoke(channel, new RestMessage
                         {
                             Author = data.Author,
                             ChannelId = data.ChannelId,
@@ -226,7 +231,10 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        _ = State.OnMessageDelete?.Invoke(data.Message);
+                        if (!State.Channels.TryGetValue(data.Message.ChannelId, out var channel))
+                            return;
+
+                        _ = State.OnMessageDelete?.Invoke(channel, data.Message);
                     }
                     break;
                 case "server_create":
@@ -266,7 +274,12 @@ public class LunarSocketClient
                         if (data.DefaultPermissions != null)
                             server.Server.DefaultPermissions = data.DefaultPermissions;
 
+                        if (data.SystemMessages != null)
+                            server.Server.SystemMessages = data.SystemMessages;
+
                         State.OnServerUpdate?.Invoke(data);
+                        if (data.DefaultPermissions != null && State.CurrentServer != null)
+                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
                 case "server_delete":
@@ -292,6 +305,8 @@ public class LunarSocketClient
                         {
                             State.Emojis.TryRemove(e.Key, out _);
                         }
+                        if (State.CurrentServer != null)
+                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
                 case "role_create":
@@ -308,9 +323,19 @@ public class LunarSocketClient
 
                         State.Roles.TryAdd(data.Role.Id, data.Role);
 
+                        foreach (var i in data.Positions)
+                        {
+                            if (server.Roles.TryGetValue(i.Key, out var role))
+                                role.Position = i.Value;
+                        }
+
                         State.OnRoleCreate?.Invoke(server.Server, data.Role);
+
+                        if (State.CurrentServer != null)
+                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
+
                 case "role_update":
                     {
                         RoleUpdateEvent? data = payload.Deserialize<RoleUpdateEvent>(JsonOptions);
@@ -318,6 +343,9 @@ public class LunarSocketClient
                             return;
 
                         if (!State.Roles.TryGetValue(data.RoleId, out var role))
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
                             return;
 
                         if (data.Name != null)
@@ -329,7 +357,10 @@ public class LunarSocketClient
                         if (data.Permissions != null)
                             role.Permissions = data.Permissions;
 
-                        State.OnRoleUpdate?.Invoke(data, role);
+                        State.OnRoleUpdate?.Invoke(server.Server, role, data);
+
+                        if (data.Permissions != null && State.CurrentServer != null)
+                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
                 case "role_delete":
@@ -338,14 +369,38 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-
                         if (!State.Roles.TryRemove(data.RoleId, out var role))
                             return;
 
                         if (State.Servers.TryGetValue(data.ServerId, out var server))
                             server.Roles.TryRemove(data.RoleId, out _);
 
-                        State.OnRoleDelete?.Invoke(role);
+                        foreach (var i in data.Positions)
+                        {
+                            if (server.Roles.TryGetValue(i.Key, out var getRole))
+                                getRole.Position = i.Value;
+                        }
+
+                        State.OnRoleDelete?.Invoke(server.Server, role);
+
+                        if (State.CurrentServer != null)
+                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
+                    }
+                    break;
+                case "role_positions":
+                    {
+                        RolePositionsEvent? data = payload.Deserialize<RolePositionsEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        foreach (var i in data.Positions)
+                        {
+                            if (server.Roles.TryGetValue(i.Key, out var getRole))
+                                getRole.Position = i.Value;
+                        }
                     }
                     break;
                 case "channel_create":
@@ -407,6 +462,112 @@ public class LunarSocketClient
                         channel.Topic = data.Topic;
                         if (State.CurrentServer != null && State.CurrentServer.Server.Id == channel.ServerId)
                             State.CurrentServer.OnChannelUpdate?.Invoke(channel);
+                    }
+                    break;
+                case "emoji_create":
+                    {
+                        EmojiCreateEvent? data = payload.Deserialize<EmojiCreateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Emojis.TryAdd(data.Emoji.Id, data.Emoji))
+                            return;
+
+                        State.Emojis.TryAdd(data.Emoji.Id, data.Emoji);
+
+                        State.OnEmojiCreate?.Invoke(server.Server, data.Emoji);
+                    }
+                    break;
+                case "emoji_update":
+                    {
+                        EmojiUpdateEvent? data = payload.Deserialize<EmojiUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Emojis.TryGetValue(data.EmojiId, out var emoji))
+                            return;
+
+                        emoji.Name = data.Name;
+
+                        State.OnEmojiUpdate?.Invoke(server.Server, emoji, data);
+                    }
+                    break;
+                case "emoji_delete":
+                    {
+                        EmojiDeleteEvent? data = payload.Deserialize<EmojiDeleteEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Emojis.TryRemove(data.EmojiId, out var emoji))
+                            return;
+
+                        State.Emojis.TryRemove(data.EmojiId, out _);
+
+                        State.OnEmojiDelete?.Invoke(server.Server, emoji);
+                    }
+                    break;
+                case "app_add":
+                    {
+                        AppAddEvent? data = payload.Deserialize<AppAddEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        server.Apps.TryAdd(data.App.Id, data.App);
+
+                        State.OnAppAdd?.Invoke(server.Server, data.App);
+                    }
+                    break;
+                case "app_update":
+                    {
+                        AppUpdatedEvent? data = payload.Deserialize<AppUpdatedEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Apps.TryRemove(data.AppId, out var app))
+                            return;
+
+                        if (data.Changed != null)
+                        {
+                            app.Name = data.Changed.Name;
+                            app.Description = data.Changed.Description;
+                            app.IsPublic = data.Changed.IsPublic;
+                            app.Website = data.Changed.Website;
+                            app.Terms = data.Changed.Terms;
+                            app.Privacy = data.Changed.Privacy;
+                        }
+
+
+                        State.OnAppUpdate?.Invoke(server.Server, app, data);
+                    }
+                    break;
+                case "app_remove":
+                    {
+                        AppRemoveEvent? data = payload.Deserialize<AppRemoveEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        if (!server.Apps.TryRemove(data.AppId, out var app))
+                            return;
+
+                        State.OnAppRemove?.Invoke(server.Server, app);
                     }
                     break;
                 case "account_relation_create":

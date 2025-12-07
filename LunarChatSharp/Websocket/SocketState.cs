@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Core.Servers;
 using LunarChatSharp.Rest.Channels;
+using LunarChatSharp.Rest.Dev;
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Servers;
@@ -30,7 +31,7 @@ public class SocketState
     public ConcurrentDictionary<string, RestRelation> Relations = new ConcurrentDictionary<string, RestRelation>();
 
 
-    public Func<RestMessage, Task>? OnMessageRecieved;
+    public Func<RestChannel, RestMessage, Task>? OnMessageRecieved;
     public Func<RestServer, Task>? OnAddServer;
     public Func<RestServer, Task>? OnRemoveServer;
     public Func<ServerUpdateEvent, Task>? OnServerUpdate;
@@ -40,14 +41,22 @@ public class SocketState
     public Func<RestRelation, Task>? OnRelationAdd;
     public Func<RestRelation, Task>? OnRelationRemove;
 
-    public Func<RestMessage, Task>? OnMessageEdit;
-    public Func<RestMessage, Task>? OnMessageDelete;
+    public Func<RestChannel, RestMessage, Task>? OnMessageEdit;
+    public Func<RestChannel, RestMessage, Task>? OnMessageDelete;
     public Func<RestUserPresence, Task>? OnPresenceUpdate;
     public Func<AccountUpdateEvent, Task>? OnAccountUpdate;
 
     public Func<RestServer, RestRole, Task>? OnRoleCreate;
-    public Func<RoleUpdateEvent, RestRole, Task>? OnRoleUpdate;
-    public Func<RestRole, Task>? OnRoleDelete;
+    public Func<RestServer, RestRole, RoleUpdateEvent, Task>? OnRoleUpdate;
+    public Func<RestServer, RestRole, Task>? OnRoleDelete;
+
+    public Func<RestServer, RestEmoji, Task>? OnEmojiCreate;
+    public Func<RestServer, RestEmoji, EmojiUpdateEvent, Task>? OnEmojiUpdate;
+    public Func<RestServer, RestEmoji, Task>? OnEmojiDelete;
+
+    public Func<RestServer, RestApp, Task>? OnAppAdd;
+    public Func<RestServer, RestApp, AppUpdatedEvent, Task>? OnAppUpdate;
+    public Func<RestServer, RestApp, Task>? OnAppRemove;
 }
 public class SocketServerState
 {
@@ -57,6 +66,7 @@ public class SocketServerState
         Member = member;
         Channels = server.Channels;
         Roles = server.Roles;
+        Apps = server.Apps;
         Emojis = server.Emojis;
     }
     public RestServer Server;
@@ -65,10 +75,13 @@ public class SocketServerState
     public ConcurrentDictionary<string, RestChannel> Channels;
     public ConcurrentDictionary<string, RestRole> Roles;
     public ConcurrentDictionary<string, RestEmoji> Emojis;
+    public ConcurrentDictionary<string, RestApp> Apps;
 
     public Func<RestChannel, Task> OnChannelCreate;
     public Func<RestChannel, Task> OnChannelDelete;
     public Func<RestChannel, Task> OnChannelUpdate;
+
+    public Func<Task> OnPermissionUpdate;
 
     public bool HasPermission(RestMember member, ServerPermission permission)
     {

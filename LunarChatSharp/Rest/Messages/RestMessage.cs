@@ -1,4 +1,5 @@
-﻿using LunarChatSharp.Rest.Users;
+﻿using LunarChatSharp.Core.Messages;
+using LunarChatSharp.Rest.Users;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Messages;
@@ -15,11 +16,17 @@ public class RestMessage
     public required string ChannelId { get; set; }
 
     [JsonPropertyName("author")]
-    public required RestUser Author { get; set; }
+    public RestUser? Author { get; set; }
+
+    [JsonPropertyName("source")]
+    public MessageSourceType Source { get; set; }
 
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
+
+    [JsonPropertyName("system_message")]
+    public SystemMessageType? SystemMessage { get; set; }
 }

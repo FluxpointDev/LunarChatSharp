@@ -12,4 +12,7 @@ public class RoleDeleteEvent : ISocketEvent
 
     [JsonPropertyName("role_id")]
     public required string? RoleId { get; set; }
+
+    [JsonPropertyName("positions")]
+    public Dictionary<string, int> Positions { get; set; }
 }

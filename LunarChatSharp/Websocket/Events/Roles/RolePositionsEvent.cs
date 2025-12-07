@@ -1,18 +1,14 @@
-﻿using LunarChatSharp.Rest.Roles;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Websocket.Events.Roles;
 
-internal class RoleCreateEvent : ISocketEvent
+public class RolePositionsEvent : ISocketEvent
 {
     [JsonPropertyName("type")]
-    public string Type { get; set; } = "role_create";
+    public string Type { get; set; } = "role_positions";
 
     [JsonPropertyName("server_id")]
     public string ServerId { get; set; }
-
-    [JsonPropertyName("role")]
-    public required RestRole? Role { get; set; }
 
     [JsonPropertyName("positions")]
     public Dictionary<string, int> Positions { get; set; }
