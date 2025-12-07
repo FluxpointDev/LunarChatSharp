@@ -69,11 +69,14 @@ public class ServerState
         if (Server.DefaultPermissions.ServerPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
             return true;
 
+        if (Server.DefaultPermissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+            return true;
+
         if (member.Roles != null)
         {
             foreach (var i in member.Roles)
             {
-                if (Roles.TryGetValue(i, out var role) && role.Permissions.ServerPermissions.HasFlag(permission))
+                if (Roles.TryGetValue(i, out var role) && (role.Permissions.ServerPermissions.HasFlag(permission) || role.Permissions.ServerPermissions.HasFlag(ServerPermission.Administrator)))
                     return true;
             }
         }
