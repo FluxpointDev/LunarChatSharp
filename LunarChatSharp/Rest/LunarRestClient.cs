@@ -6,15 +6,17 @@ namespace LunarChatSharp.Rest;
 
 public class LunarRestClient
 {
-    public void Initialize(string url)
+    public LunarRestClient(LunarClient client)
     {
-        HttpClientHandler ClientHandler = new HttpClientHandler()
+        Client = client;
+        HttpClientHandler ClientHandler = new HttpClientHandler();
+        if (client.Config.RestProxy != null)
         {
-            //UseProxy = Client.Config.RestProxy != null
-        };
-        //ClientHandler.Proxy = new WebProxy("http://localhost:8888");
+            ClientHandler.UseProxy = true;
+            ClientHandler.Proxy = client.Config.RestProxy;
+        }
 
-        Url = url;
+        Url = client.Config.ApiUrl;
         Http = new HttpClient(ClientHandler)
         {
             BaseAddress = new Uri(Url)
@@ -26,6 +28,9 @@ public class LunarRestClient
         }
         catch { }
     }
+
+    internal LunarClient Client { get; private set; }
+
     public string Url;
     public HttpClient Http;
 
