@@ -5,6 +5,7 @@ using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
 using LunarChatSharp.Websocket.Events.Account;
 using LunarChatSharp.Websocket.Events.Channels;
+using LunarChatSharp.Websocket.Events.Members;
 using LunarChatSharp.Websocket.Events.Messages;
 using LunarChatSharp.Websocket.Events.Roles;
 using LunarChatSharp.Websocket.Events.Servers;
@@ -184,7 +185,6 @@ public class LunarSocketClient
                         State.Emojis = new ConcurrentDictionary<string, RestEmoji>(Emojis);
                         State.Channels = new ConcurrentDictionary<string, RestChannel>(Channels);
                         State.Roles = new ConcurrentDictionary<string, RestRole>(Roles);
-
                         foreach (var i in State.Servers.Values)
                         {
                             Client.OnAddServer?.Invoke(i.Server);
@@ -276,7 +276,7 @@ public class LunarSocketClient
                         if (data.SystemMessages != null)
                             server.Server.SystemMessages = data.SystemMessages;
 
-                        Client.OnServerUpdate?.Invoke(data);
+                        Client.OnServerUpdate?.Invoke(server.Server, data);
                         if (data.DefaultPermissions != null && State.CurrentServer != null)
                             State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
@@ -291,6 +291,8 @@ public class LunarSocketClient
                             return;
 
                         Client.OnRemoveServer?.Invoke(server.Server);
+                        server.Server.OwnerId = "0";
+                        server.Server.DefaultPermissions = new RestPermissions();
                         State.Servers.TryRemove(data.ServerId, out _);
                         foreach (var c in server.Channels)
                         {
@@ -308,6 +310,95 @@ public class LunarSocketClient
                             State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
+
+                #region Members
+                case "member_join":
+                    {
+                        MemberJoinEvent? data = payload.Deserialize<MemberJoinEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberJoin?.Invoke(server.Server, data.Member);
+                    }
+                    break;
+                case "member_left":
+                    {
+                        MemberLeftEvent? data = payload.Deserialize<MemberLeftEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberLeft?.Invoke(server.Server, data.Member);
+                    }
+                    break;
+                case "member_ban":
+                    {
+                        MemberBanEvent? data = payload.Deserialize<MemberBanEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberBan?.Invoke(server.Server, data.Member, data.Ban);
+                    }
+                    break;
+                case "member_unban":
+                    {
+                        MemberUnbanEvent? data = payload.Deserialize<MemberUnbanEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberUnban?.Invoke(server.Server, data.User);
+                    }
+                    break;
+                case "member_kick":
+                    {
+                        MemberKickEvent? data = payload.Deserialize<MemberKickEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberKick?.Invoke(server.Server, data.Member);
+                    }
+                    break;
+                case "member_timeout":
+                    {
+                        MemberTimeoutEvent? data = payload.Deserialize<MemberTimeoutEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberTimeout?.Invoke(server.Server, data.Member);
+                    }
+                    break;
+                case "member_update":
+                    {
+                        MemberUpdateEvent? data = payload.Deserialize<MemberUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnMemberUpdate?.Invoke(server.Server, data.UserId, data.Data);
+                    }
+                    break;
+                #endregion
+
+                #region Roles
                 case "role_create":
                     {
                         RoleCreateEvent? data = payload.Deserialize<RoleCreateEvent>(JsonOptions);
@@ -402,6 +493,9 @@ public class LunarSocketClient
                         }
                     }
                     break;
+                #endregion
+
+                #region Channels
                 case "channel_create":
                     {
                         ChannelCreateEvent? data = payload.Deserialize<ChannelCreateEvent>(JsonOptions);
@@ -463,6 +557,34 @@ public class LunarSocketClient
                             State.CurrentServer.OnChannelUpdate?.Invoke(channel);
                     }
                     break;
+                case "invite_create":
+                    {
+                        InviteCreateEvent? data = payload.Deserialize<InviteCreateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnInviteCreate?.Invoke(server.Server, data.Invite);
+                    }
+                    break;
+                case "invite_delete":
+                    {
+                        InviteDeleteEvent? data = payload.Deserialize<InviteDeleteEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
+                            return;
+
+                        Client.OnInviteDelete?.Invoke(server.Server, data.Code);
+                    }
+                    break;
+
+                #endregion
+
+                #region Emojis
                 case "emoji_create":
                     {
                         EmojiCreateEvent? data = payload.Deserialize<EmojiCreateEvent>(JsonOptions);
@@ -514,6 +636,9 @@ public class LunarSocketClient
                         Client.OnEmojiDelete?.Invoke(server.Server, emoji);
                     }
                     break;
+                #endregion
+
+                #region Apps
                 case "app_add":
                     {
                         AppAddEvent? data = payload.Deserialize<AppAddEvent>(JsonOptions);
@@ -569,6 +694,9 @@ public class LunarSocketClient
                         Client.OnAppRemove?.Invoke(server.Server, app);
                     }
                     break;
+                #endregion
+
+                #region Accounts
                 case "account_relation_create":
                     {
                         RelationCreateEvent? data = payload.Deserialize<RelationCreateEvent>(JsonOptions);
@@ -614,6 +742,7 @@ public class LunarSocketClient
                         Client.OnAccountUpdate?.Invoke(data);
                     }
                     break;
+                    #endregion
             }
         }
         catch (Exception ex)

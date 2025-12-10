@@ -13,6 +13,8 @@ public class SocketMember : RestMember
             Roles = data.Roles,
             Timeout = data.Timeout,
             ServerId = data.ServerId,
+            User = data.User,
+            JoinedAt = data.JoinedAt
         };
 
         return member;

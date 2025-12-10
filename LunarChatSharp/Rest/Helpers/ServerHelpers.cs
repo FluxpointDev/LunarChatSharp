@@ -30,22 +30,6 @@ public static class ServerHelpers
         return await rest.GetAsync<RestApp>($"/servers/{serverId}/{appId}");
     }
 
-    /// <summary>
-    /// This is only used for internal lunar chat servers!
-    /// </summary>
-    public static async Task AddMemberAsync(this LunarRestClient rest, string serverId, string userId)
-    {
-        await rest.PutAsync($"/servers/{serverId}/members/{userId}");
-    }
-
-    /// <summary>
-    /// This is only used for internal lunar chat servers!
-    /// </summary>
-    public static async Task RemoveMemberAsync(this LunarRestClient rest, string serverId, string userId)
-    {
-        await rest.DeleteAsync($"/servers/{serverId}/members/{userId}");
-    }
-
     public static async Task<RestServer> EditServerAsync(this LunarRestClient rest, string serverId, EditServerRequest request)
     {
         return await rest.PatchAsync<RestServer>($"/servers/{serverId}", request);
@@ -54,5 +38,19 @@ public static class ServerHelpers
     public static async Task LeaveServerAsync(this LunarRestClient rest, string serverId)
     {
         await rest.DeleteAsync($"/servers/{serverId}");
+    }
+
+    public static async Task<RestBan?> GetBanAsync(this LunarRestClient rest, string serverId, string userId)
+    {
+        return await rest.GetAsync<RestBan>($"/servers/{serverId}/bans/{userId}");
+    }
+
+    public static async Task<RestBan[]> GetBansAsync(this LunarRestClient rest, string serverId)
+    {
+        var members = await rest.GetAsync<RestBan[]>($"/servers/{serverId}/bans");
+        if (members == null)
+            return Array.Empty<RestBan>();
+
+        return members;
     }
 }

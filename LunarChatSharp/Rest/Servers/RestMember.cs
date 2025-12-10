@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Rest.Users;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Servers;
 
@@ -19,4 +20,19 @@ public class RestMember
     [JsonPropertyName("timeout")]
     public DateTime? Timeout { get; set; }
 
+    [JsonPropertyName("joined_at")]
+    public required DateTime? JoinedAt { get; set; }
+
+    [JsonPropertyName("user")]
+    public required RestUser? User { get; set; }
+
+    public string GetCurrentName()
+    {
+        return (Nickname ?? User.DisplayName ?? User.Username);
+    }
+
+    public string GetCurrentNameDiscrim()
+    {
+        return (Nickname ?? User.DisplayName ?? User.Username) + (User.IsBot ? User.Discriminator : null);
+    }
 }

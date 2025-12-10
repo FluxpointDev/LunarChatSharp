@@ -52,17 +52,71 @@ public class SocketServerState
 
     public Func<Task> OnPermissionUpdate;
 
+    public bool CanManageServer(RestMember member)
+    {
+        bool CanView = HasPermission(member, ServerPermission.ManageServer);
+        if (!CanView)
+            CanView = HasPermission(member, ServerPermission.ManageExpressions);
+        if (!CanView)
+            CanView = HasPermission(member, ServerPermission.CreateExpressions);
+        if (!CanView)
+            CanView = HasPermission(member, ServerPermission.ManageApps);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.BanMembers);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.ViewAuditLogs);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.AssignRoles);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.ManageRoles);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.ManageRolePermissions);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.ManageApprovals);
+        if (!CanView)
+            CanView = HasPermission(member, ModPermission.ManageAppeals);
+        if (!CanView)
+            CanView = HasPermission(member, ChannelPermission.ManageWebhooks);
+        if (!CanView)
+            CanView = HasPermission(member, ChannelPermission.ManageInvites);
+        return CanView;
+    }
+
+    public bool CanManageChannel(RestMember member)
+    {
+        bool CanManage = HasPermission(member, ChannelPermission.ManageChannel);
+        if (!CanManage)
+            CanManage = HasPermission(member, ChannelPermission.ManageChannelPermissions);
+
+        if (!CanManage)
+            CanManage = HasPermission(member, ChannelPermission.ManageWebhooks);
+
+        if (!CanManage)
+            CanManage = HasPermission(member, ChannelPermission.ManageInvites);
+
+        return CanManage;
+    }
+
     public bool HasPermission(RestMember member, ServerPermission permission)
     {
-        if (Server.DefaultPermissions.ServerPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+        if (member.Id == Server.OwnerId || Server.DefaultPermissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+            return true;
+
+        if (Server.DefaultPermissions.ServerPermissions.HasFlag(permission))
             return true;
 
         if (member.Roles != null)
         {
             foreach (var i in member.Roles)
             {
-                if (Roles.TryGetValue(i, out var role) && role.Permissions.ServerPermissions.HasFlag(permission))
-                    return true;
+                if (Roles.TryGetValue(i, out var role))
+                {
+                    if (role.Permissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+                        return true;
+
+                    if (role.Permissions.ServerPermissions.HasFlag(permission))
+                        return true;
+                }
             }
         }
         return false;
@@ -70,15 +124,24 @@ public class SocketServerState
 
     public bool HasPermission(RestMember member, ModPermission permission)
     {
-        if (Server.DefaultPermissions.ModPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+        if (member.Id == Server.OwnerId || Server.DefaultPermissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+            return true;
+
+        if (Server.DefaultPermissions.ModPermissions.HasFlag(permission))
             return true;
 
         if (member.Roles != null)
         {
             foreach (var i in member.Roles)
             {
-                if (Roles.TryGetValue(i, out var role) && role.Permissions.ModPermissions.HasFlag(permission))
-                    return true;
+                if (Roles.TryGetValue(i, out var role))
+                {
+                    if (role.Permissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+                        return true;
+
+                    if (role.Permissions.ModPermissions.HasFlag(permission))
+                        return true;
+                }
             }
         }
         return false;
@@ -86,15 +149,24 @@ public class SocketServerState
 
     public bool HasPermission(RestMember member, ChannelPermission permission)
     {
-        if (Server.DefaultPermissions.ChannelPermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+        if (member.Id == Server.OwnerId || Server.DefaultPermissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+            return true;
+
+        if (Server.DefaultPermissions.ChannelPermissions.HasFlag(permission))
             return true;
 
         if (member.Roles != null)
         {
             foreach (var i in member.Roles)
             {
-                if (Roles.TryGetValue(i, out var role) && role.Permissions.ChannelPermissions.HasFlag(permission))
-                    return true;
+                if (Roles.TryGetValue(i, out var role))
+                {
+                    if (role.Permissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+                        return true;
+
+                    if (role.Permissions.ChannelPermissions.HasFlag(permission))
+                        return true;
+                }
             }
         }
         return false;
@@ -102,15 +174,24 @@ public class SocketServerState
 
     public bool HasPermission(RestMember member, VoicePermission permission)
     {
-        if (Server.DefaultPermissions.VoicePermissions.HasFlag(permission) || member.Id == Server.OwnerId)
+        if (member.Id == Server.OwnerId || Server.DefaultPermissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+            return true;
+
+        if (Server.DefaultPermissions.VoicePermissions.HasFlag(permission))
             return true;
 
         if (member.Roles != null)
         {
             foreach (var i in member.Roles)
             {
-                if (Roles.TryGetValue(i, out var role) && role.Permissions.VoicePermissions.HasFlag(permission))
-                    return true;
+                if (Roles.TryGetValue(i, out var role))
+                {
+                    if (role.Permissions.ServerPermissions.HasFlag(ServerPermission.Administrator))
+                        return true;
+
+                    if (role.Permissions.VoicePermissions.HasFlag(permission))
+                        return true;
+                }
             }
         }
         return false;

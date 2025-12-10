@@ -28,4 +28,14 @@ public class RestUser
 
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
+
+    public string GetCurrentName()
+    {
+        return (DisplayName ?? Username);
+    }
+
+    public string GetCurrentNameDiscrim()
+    {
+        return (DisplayName ?? Username) + (IsBot ? "#" + Discriminator : null);
+    }
 }

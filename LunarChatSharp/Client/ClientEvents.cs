@@ -15,7 +15,7 @@ public class ClientEvents
     public Func<RestChannel, RestMessage, Task>? OnMessageRecieved;
     public Func<RestServer, Task>? OnAddServer;
     public Func<RestServer, Task>? OnRemoveServer;
-    public Func<ServerUpdateEvent, Task>? OnServerUpdate;
+    public Func<RestServer, ServerUpdateEvent, Task>? OnServerUpdate;
     public Func<RestServer?, Task>? OnSelectServer;
     public Func<RestChannel, RestRelation, Task>? OnSelectChannel;
 
@@ -39,4 +39,15 @@ public class ClientEvents
     public Func<RestServer, RestApp, Task>? OnAppAdd;
     public Func<RestServer, RestApp, AppUpdatedEvent, Task>? OnAppUpdate;
     public Func<RestServer, RestApp, Task>? OnAppRemove;
+
+    public Func<RestServer, RestInvite, Task>? OnInviteCreate;
+    public Func<RestServer, string, Task>? OnInviteDelete;
+
+    public Func<RestServer, RestMember, RestBan, Task>? OnMemberBan;
+    public Func<RestServer, RestMember, Task>? OnMemberKick;
+    public Func<RestServer, RestMember, Task>? OnMemberTimeout;
+    public Func<RestServer, RestMember, Task>? OnMemberJoin;
+    public Func<RestServer, RestMember, Task>? OnMemberLeft;
+    public Func<RestServer, RestUser, Task>? OnMemberUnban;
+    public Func<RestServer, string, EditMemberRequest, Task>? OnMemberUpdate;
 }
