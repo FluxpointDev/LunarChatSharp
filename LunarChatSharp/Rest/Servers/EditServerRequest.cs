@@ -16,4 +16,7 @@ public class EditServerRequest : ILunarRequest
 
     [JsonPropertyName("system_messages")]
     public RestServerSystemMessages? SystemMessages { get; set; }
+
+    [JsonPropertyName("is_discoverable")]
+    public bool? IsDiscoverable { get; set; }
 }

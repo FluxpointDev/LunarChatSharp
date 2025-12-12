@@ -1,4 +1,5 @@
 ﻿using LunarChatSharp.Core.Channels;
+using LunarChatSharp.Rest.Users;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Channels;
@@ -19,4 +20,18 @@ public class RestChannel
 
     [JsonPropertyName("server_id")]
     public string? ServerId { get; set; }
+
+    [JsonPropertyName("users")]
+    public HashSet<RestUser>? Users { get; set; }
+
+    [JsonPropertyName("group_settings")]
+    public RestGroupSettings? GroupSettings { get; set; }
+
+    [JsonPropertyName("is_nsfw")]
+    public bool IsNsfw { get; set; }
+}
+public class RestGroupSettings
+{
+    [JsonPropertyName("owner_id")]
+    public string? OwnerId { get; set; }
 }

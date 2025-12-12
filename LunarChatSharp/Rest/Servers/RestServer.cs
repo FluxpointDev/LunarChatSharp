@@ -1,4 +1,5 @@
-﻿using LunarChatSharp.Rest.Roles;
+﻿using LunarChatSharp.Core.Servers;
+using LunarChatSharp.Rest.Roles;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Servers;
@@ -25,6 +26,9 @@ public class RestServer
 
     [JsonPropertyName("default_permissions")]
     public required RestPermissions DefaultPermissions { get; set; }
+
+    [JsonPropertyName("features")]
+    public ServerFeature Features { get; set; }
 
     public string GetFallback()
     {

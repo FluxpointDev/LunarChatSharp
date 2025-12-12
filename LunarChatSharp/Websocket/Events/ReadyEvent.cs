@@ -29,6 +29,9 @@ public class ReadyEvent : ISocketEvent
     [JsonPropertyName("servers")]
     public required ConcurrentDictionary<string, ServerState>? Servers { get; set; }
 
+    [JsonPropertyName("private_channels")]
+    public required ConcurrentDictionary<string, RestChannel>? PrivateChannels { get; set; }
+
     [JsonPropertyName("members")]
     public required ConcurrentDictionary<string, RestMember>? Members { get; set; }
 

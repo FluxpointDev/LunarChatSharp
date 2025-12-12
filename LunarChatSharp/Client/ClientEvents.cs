@@ -17,7 +17,7 @@ public class ClientEvents
     public Func<RestServer, Task>? OnRemoveServer;
     public Func<RestServer, ServerUpdateEvent, Task>? OnServerUpdate;
     public Func<RestServer?, Task>? OnSelectServer;
-    public Func<RestChannel, RestRelation, Task>? OnSelectChannel;
+    public Func<RestChannel?, Task>? OnSelectChannel;
 
     public Func<RestRelation, Task>? OnRelationAdd;
     public Func<RestRelation, RelationUpdateEvent, Task>? OnRelationUpdate;
@@ -50,4 +50,11 @@ public class ClientEvents
     public Func<RestServer, RestMember, Task>? OnMemberLeft;
     public Func<RestServer, RestUser, Task>? OnMemberUnban;
     public Func<RestServer, string, EditMemberRequest, Task>? OnMemberUpdate;
+
+    public Func<Task>? OnReady;
+    public Func<RestChannel, Task>? OnDMCreate;
+    public Func<RestChannel, UpdateChannelRequest, Task>? OnDMUpdate;
+    public Func<RestChannel, Task>? OnGroupCreate;
+    public Func<RestChannel, UpdateChannelRequest, Task>? OnGroupUpdate;
+    public Func<RestChannel, Task>? OnGroupDelete;
 }

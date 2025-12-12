@@ -35,7 +35,7 @@ public static class ServerHelpers
         return await rest.PatchAsync<RestServer>($"/servers/{serverId}", request);
     }
 
-    public static async Task LeaveServerAsync(this LunarRestClient rest, string serverId)
+    public static async Task DeleteServerAsync(this LunarRestClient rest, string serverId)
     {
         await rest.DeleteAsync($"/servers/{serverId}");
     }

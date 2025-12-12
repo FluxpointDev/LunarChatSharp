@@ -13,6 +13,9 @@ public class RestServerSystemMessages
     [JsonPropertyName("member_banned")]
     public string? MemberBanned { get; set; }
 
+    [JsonPropertyName("member_unbanned")]
+    public string? MemberUnbanned { get; set; }
+
     [JsonPropertyName("member_kicked")]
     public string? MemberKicked { get; set; }
 

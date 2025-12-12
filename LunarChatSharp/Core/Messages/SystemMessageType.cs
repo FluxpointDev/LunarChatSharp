@@ -5,11 +5,15 @@ public enum SystemMessageType
     MemberJoined,
     MemberLeft,
     MemberBanned,
+    MemberUnbanned,
     MemberKicked,
     MemberTimedout,
     AppAdded,
     AppRemoved,
     GroupUserAdded,
     GroupUserRemoved,
-    GroupOwnershipChanged
+    GroupUserLeft,
+    GroupOwnershipChanged,
+    GroupNameChanged,
+    GroupTopicChanged
 }

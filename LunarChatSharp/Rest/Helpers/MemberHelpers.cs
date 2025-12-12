@@ -30,9 +30,9 @@ public static class MemberHelpers
     /// <summary>
     /// This is only used for internal lunar chat servers!
     /// </summary>
-    public static async Task RemoveMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task LeaveServerAsync(this LunarRestClient rest, string serverId)
     {
-        await rest.DeleteAsync($"/servers/{serverId}/members/{userId}");
+        await rest.DeleteAsync($"/servers/{serverId}/leave");
     }
 
     public static async Task AddMemberRoleAsync(this LunarRestClient rest, string serverId, string userId, string roleId)
@@ -62,7 +62,7 @@ public static class MemberHelpers
 
     public static async Task<RestMember> EditMemberAsync(this LunarRestClient rest, string serverId, string userId, EditMemberRequest request)
     {
-        return await rest.PostAsync<RestMember>($"/servers/{serverId}/members/{userId}", request);
+        return await rest.PatchAsync<RestMember>($"/servers/{serverId}/members/{userId}", request);
     }
 
     public static async Task<RestMember> TimeoutMemberAsync(this LunarRestClient rest, string serverId, string userId, DateTime? time)

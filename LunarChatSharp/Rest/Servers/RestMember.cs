@@ -33,6 +33,6 @@ public class RestMember
 
     public string GetCurrentNameDiscrim()
     {
-        return (Nickname ?? User.DisplayName ?? User.Username) + (User.IsBot ? User.Discriminator : null);
+        return (Nickname ?? User.DisplayName ?? User.Username) + (User.IsBot ? "#" + User.Discriminator : null);
     }
 }

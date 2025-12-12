@@ -1,4 +1,6 @@
-﻿using LunarChatSharp.Rest.Channels;
+﻿using LunarChatSharp.Core.Channels;
+using LunarChatSharp.Core.Servers;
+using LunarChatSharp.Rest.Channels;
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
 using LunarChatSharp.Rest.Users;
@@ -163,6 +165,7 @@ public class LunarSocketClient
                         State.Account = data.Account!;
                         State.Relations = new ConcurrentDictionary<string, RestRelation>(data.Relations!);
                         State.Servers = new ConcurrentDictionary<string, SocketServerState>(data.Servers!.ToDictionary(x => x.Key, x => new SocketServerState(x.Value, data.Members![x.Key])));
+                        State.PrivateChannels = data.PrivateChannels;
 
                         Dictionary<string, RestEmoji> Emojis = new Dictionary<string, RestEmoji>();
                         Dictionary<string, RestChannel> Channels = new Dictionary<string, RestChannel>();
@@ -184,11 +187,18 @@ public class LunarSocketClient
                         }
                         State.Emojis = new ConcurrentDictionary<string, RestEmoji>(Emojis);
                         State.Channels = new ConcurrentDictionary<string, RestChannel>(Channels);
+                        foreach (var i in State.PrivateChannels)
+                        {
+                            State.Channels.TryAdd(i.Key, i.Value);
+                        }
+
                         State.Roles = new ConcurrentDictionary<string, RestRole>(Roles);
                         foreach (var i in State.Servers.Values)
                         {
                             Client.OnAddServer?.Invoke(i.Server);
                         }
+
+                        Client.OnReady?.Invoke();
                     }
                     break;
                 case "message_create":
@@ -217,7 +227,7 @@ public class LunarSocketClient
                         {
                             Author = data.Author,
                             ChannelId = data.ChannelId,
-                            Content = data.Content,
+                            Content = data.Content.ToNullOrString(),
                             Id = data.Id,
                             CreatedAt = DateTime.Now,
                             UpdatedAt = data.UpdatedAt
@@ -264,20 +274,52 @@ public class LunarSocketClient
                         if (!State.Servers.TryGetValue(data.ServerId, out var server))
                             return;
 
-                        if (data.Name != null)
-                            server.Server.Name = data.Name;
+                        if (data.Changed.Name != null)
+                            server.Server.Name = data.Changed.Name;
 
-                        if (data.Description != null)
-                            server.Server.Description = data.Description;
+                        if (data.Changed.Description != null)
+                            server.Server.Description = data.Changed.Description.ToNullOrString();
 
-                        if (data.DefaultPermissions != null)
-                            server.Server.DefaultPermissions = data.DefaultPermissions;
+                        if (data.Changed.DefaultPermissions != null)
+                            server.Server.DefaultPermissions = data.Changed.DefaultPermissions;
 
-                        if (data.SystemMessages != null)
-                            server.Server.SystemMessages = data.SystemMessages;
+                        if (data.Changed.IsDiscoverable.HasValue)
+                        {
+                            if (data.Changed.IsDiscoverable.Value)
+                                server.Server.Features |= ServerFeature.Discoverable;
+                            else
+                                server.Server.Features &= ~ServerFeature.Discoverable;
+                        }
+
+                        if (data.Changed.SystemMessages != null)
+                        {
+                            if (data.Changed.SystemMessages.MemberJoined != null)
+                                server.Server.SystemMessages.MemberJoined = data.Changed.SystemMessages.MemberJoined.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.MemberLeft != null)
+                                server.Server.SystemMessages.MemberLeft = data.Changed.SystemMessages.MemberLeft.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.MemberBanned != null)
+                                server.Server.SystemMessages.MemberBanned = data.Changed.SystemMessages.MemberBanned.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.MemberUnbanned != null)
+                                server.Server.SystemMessages.MemberUnbanned = data.Changed.SystemMessages.MemberUnbanned.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.MemberKicked != null)
+                                server.Server.SystemMessages.MemberKicked = data.Changed.SystemMessages.MemberKicked.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.MemberTimedout != null)
+                                server.Server.SystemMessages.MemberTimedout = data.Changed.SystemMessages.MemberTimedout.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.AppAdded != null)
+                                server.Server.SystemMessages.AppAdded = data.Changed.SystemMessages.AppAdded.ToNullOrString();
+
+                            if (data.Changed.SystemMessages.AppRemoved != null)
+                                server.Server.SystemMessages.AppRemoved = data.Changed.SystemMessages.AppRemoved.ToNullOrString();
+                        }
 
                         Client.OnServerUpdate?.Invoke(server.Server, data);
-                        if (data.DefaultPermissions != null && State.CurrentServer != null)
+                        if (data.Changed.DefaultPermissions != null && State.CurrentServer != null)
                             State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
@@ -393,7 +435,15 @@ public class LunarSocketClient
                         if (!State.Servers.TryGetValue(data.ServerId, out var server))
                             return;
 
-                        Client.OnMemberUpdate?.Invoke(server.Server, data.UserId, data.Data);
+                        if (data.Changed.Nickname != null && data.UserId == server.Member.Id)
+                            server.Member.Nickname = data.Changed.Nickname.ToNullOrString();
+
+                        if (data.Changed.TimeoutRemove)
+                            server.Member.Timeout = null;
+                        else if (data.Changed.Timeout.HasValue)
+                            server.Member.Timeout = data.Changed.Timeout.Value;
+
+                        Client.OnMemberUpdate?.Invoke(server.Server, data.UserId, data.Changed);
                     }
                     break;
                 #endregion
@@ -499,12 +549,17 @@ public class LunarSocketClient
                 case "channel_create":
                     {
                         ChannelCreateEvent? data = payload.Deserialize<ChannelCreateEvent>(JsonOptions);
-                        if (data == null)
+                        if (data == null || data.Channel == null)
                             return;
 
-                        if (data.Channel.Type == Core.Channels.ChannelType.Direct || data.Channel.Type == Core.Channels.ChannelType.Group)
+                        if (data.Channel.Type == ChannelType.Direct || data.Channel.Type == ChannelType.Group)
                         {
                             State.Channels.TryAdd(data.Channel.Id, data.Channel);
+                            State.PrivateChannels.TryAdd(data.Channel.Id, data.Channel);
+                            if (data.Channel.Type == ChannelType.Direct)
+                                Client.OnDMCreate?.Invoke(data.Channel);
+                            else
+                                Client.OnGroupCreate?.Invoke(data.Channel);
                         }
                         else
                         {
@@ -513,7 +568,7 @@ public class LunarSocketClient
 
                             server.Channels.TryAdd(data.Channel.Id, data.Channel);
                             State.Channels.TryAdd(data.Channel.Id, data.Channel);
-                            if (State.CurrentServer != null && State.CurrentServer.Server.Id == data.Channel.ServerId)
+                            if (State.CurrentServer != null && !string.IsNullOrEmpty(data.Channel.ServerId) && State.CurrentServer.Server.Id == data.Channel.ServerId)
                                 State.CurrentServer.OnChannelCreate?.Invoke(data.Channel);
                         }
                     }
@@ -527,9 +582,17 @@ public class LunarSocketClient
                         if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
                             return;
 
-                        if (channel.Type == Core.Channels.ChannelType.Direct || channel.Type == Core.Channels.ChannelType.Group)
+                        if (channel.Type == ChannelType.Direct || channel.Type == ChannelType.Group)
                         {
                             State.Channels.TryRemove(channel.Id, out _);
+                            State.PrivateChannels.TryRemove(channel.Id, out _);
+                            if (channel.Type == ChannelType.Direct)
+                            {
+
+                            }
+                            //Client.OnDMCreate?.Invoke(data.Channel);
+                            else
+                                Client.OnGroupDelete?.Invoke(channel);
                         }
                         else
                         {
@@ -538,7 +601,7 @@ public class LunarSocketClient
 
                             State.Channels.TryRemove(channel.Id, out _);
                         }
-                        if (State.CurrentServer != null && State.CurrentServer.Server.Id == channel.ServerId)
+                        if (State.CurrentServer != null && !string.IsNullOrEmpty(channel.ServerId) && State.CurrentServer.Server.Id == channel.ServerId)
                             State.CurrentServer.OnChannelDelete?.Invoke(channel);
                     }
                     break;
@@ -551,10 +614,22 @@ public class LunarSocketClient
                         if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
                             return;
 
-                        channel.Name = data.Name;
-                        channel.Topic = data.Topic;
-                        if (State.CurrentServer != null && State.CurrentServer.Server.Id == channel.ServerId)
-                            State.CurrentServer.OnChannelUpdate?.Invoke(channel);
+                        if (data.Changed != null)
+                        {
+                            if (data.Changed.Name != null)
+                                channel.Name = data.Changed.Name;
+
+                            if (data.Changed.Topic != null)
+                                channel.Topic = data.Changed.Topic;
+                        }
+
+                        if (channel.Type == ChannelType.Direct)
+                            Client.OnDMUpdate?.Invoke(channel, data.Changed);
+                        else
+                            Client.OnGroupUpdate?.Invoke(channel, data.Changed);
+
+                        if (State.CurrentServer != null && !string.IsNullOrEmpty(channel.ServerId) && State.CurrentServer.Server.Id == channel.ServerId)
+                            State.CurrentServer.OnChannelUpdate?.Invoke(channel, data.Changed);
                     }
                     break;
                 case "invite_create":
@@ -668,11 +743,11 @@ public class LunarSocketClient
                         if (data.Changed != null)
                         {
                             app.Name = data.Changed.Name;
-                            app.Description = data.Changed.Description;
+                            app.Description = data.Changed.Description.ToNullOrString();
                             app.IsPublic = data.Changed.IsPublic;
-                            app.Website = data.Changed.Website;
-                            app.Terms = data.Changed.Terms;
-                            app.Privacy = data.Changed.Privacy;
+                            app.Website = data.Changed.Website.ToNullOrString();
+                            app.Terms = data.Changed.Terms.ToNullOrString();
+                            app.Privacy = data.Changed.Privacy.ToNullOrString();
                         }
 
 
@@ -727,8 +802,11 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        if (!State.Relations.TryRemove(data.UserId, out var relation))
+                        if (!State.Relations.TryGetValue(data.UserId, out var relation))
                             return;
+
+                        if (data.Note != null)
+                            relation.Note = data.Note.ToNullOrString();
 
                         Client.OnRelationUpdate?.Invoke(relation, data);
                     }

@@ -19,6 +19,7 @@ public class SocketState
     public string LunarDevId = null!;
 
     public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
+    public ConcurrentDictionary<string, RestChannel> PrivateChannels = new ConcurrentDictionary<string, RestChannel>();
     public ConcurrentDictionary<string, RestChannel> Channels = new ConcurrentDictionary<string, RestChannel>();
     public ConcurrentDictionary<string, RestEmoji> Emojis = new ConcurrentDictionary<string, RestEmoji>();
     public ConcurrentDictionary<string, RestRole> Roles = new ConcurrentDictionary<string, RestRole>();
@@ -48,7 +49,7 @@ public class SocketServerState
 
     public Func<RestChannel, Task> OnChannelCreate;
     public Func<RestChannel, Task> OnChannelDelete;
-    public Func<RestChannel, Task> OnChannelUpdate;
+    public Func<RestChannel, UpdateChannelRequest, Task> OnChannelUpdate;
 
     public Func<Task> OnPermissionUpdate;
 

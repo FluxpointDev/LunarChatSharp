@@ -15,5 +15,5 @@ public class MemberUpdateEvent : ISocketEvent
     public required string? UserId { get; set; }
 
     [JsonPropertyName("data")]
-    public required EditMemberRequest? Data { get; set; }
+    public required EditMemberRequest? Changed { get; set; }
 }

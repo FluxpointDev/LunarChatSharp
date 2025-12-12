@@ -1,5 +1,4 @@
-﻿using LunarChatSharp.Rest.Roles;
-using LunarChatSharp.Rest.Servers;
+﻿using LunarChatSharp.Rest.Servers;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Websocket.Events.Servers;
@@ -12,15 +11,6 @@ public class ServerUpdateEvent : ISocketEvent
     [JsonPropertyName("server_id")]
     public required string? ServerId { get; set; }
 
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    [JsonPropertyName("description")]
-    public string? Description { get; set; }
-
-    [JsonPropertyName("default_permissions")]
-    public RestPermissions? DefaultPermissions { get; set; }
-
-    [JsonPropertyName("system_messages")]
-    public RestServerSystemMessages? SystemMessages { get; set; }
+    [JsonPropertyName("changed")]
+    public required EditServerRequest Changed { get; set; }
 }
