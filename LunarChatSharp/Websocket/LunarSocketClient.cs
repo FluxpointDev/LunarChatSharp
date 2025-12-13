@@ -201,6 +201,8 @@ public class LunarSocketClient
                         Client.OnReady?.Invoke();
                     }
                     break;
+
+                #region Messages
                 case "message_create":
                     {
                         MessageCreateEvent? data = payload.Deserialize<MessageCreateEvent>(JsonOptions);
@@ -246,6 +248,9 @@ public class LunarSocketClient
                         _ = Client.OnMessageDelete?.Invoke(channel, data.Message);
                     }
                     break;
+                #endregion
+
+                #region Servers
                 case "server_create":
                     {
                         ServerCreateEvent? data = payload.Deserialize<ServerCreateEvent>(JsonOptions);
@@ -352,6 +357,7 @@ public class LunarSocketClient
                             State.CurrentServer?.OnPermissionUpdate?.Invoke();
                     }
                     break;
+                #endregion
 
                 #region Members
                 case "member_join":
@@ -767,6 +773,45 @@ public class LunarSocketClient
                             return;
 
                         Client.OnAppRemove?.Invoke(server.Server, app);
+                    }
+                    break;
+                #endregion
+
+                #region Webhooks
+                case "webhook_create":
+                    {
+                        WebhookCreateEvent? data = payload.Deserialize<WebhookCreateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.Webhook.ChannelId, out var channel))
+                            return;
+
+                        Client.OnWebhookCreate?.Invoke(channel, data.Webhook);
+                    }
+                    break;
+                case "webhook_update":
+                    {
+                        WebhookUpdateEvent? data = payload.Deserialize<WebhookUpdateEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnWebhookUpdate?.Invoke(channel, data.WebhookId, data.Changed);
+                    }
+                    break;
+                case "webhook_delete":
+                    {
+                        WebhookDeleteEvent? data = payload.Deserialize<WebhookDeleteEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnWebhookDelete?.Invoke(channel, data.WebhookId);
                     }
                     break;
                 #endregion

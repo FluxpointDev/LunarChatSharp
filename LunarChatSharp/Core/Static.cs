@@ -9,6 +9,7 @@ public static class Static
     public static int MaxDescriptionLength = 500;
     public static int MaxLinkLength = 300;
     public static int MaxMessageContentLength = 2048;
+    public static int MaxWebhooks = 10;
     public static bool IsLink(string? text)
     {
 
