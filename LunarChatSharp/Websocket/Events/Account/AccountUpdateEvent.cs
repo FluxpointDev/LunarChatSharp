@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Rest.Accounts;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Websocket.Events.Account;
 
@@ -16,12 +17,6 @@ public class AccountUpdateEvent : ISocketEvent
     [JsonPropertyName("email")]
     public string? Email { get; set; }
 
-    [JsonPropertyName("requests_everyone")]
-    public bool? FriendRequestsEveryone { get; set; }
-
-    [JsonPropertyName("requests_server_members")]
-    public bool? FriendRequestsServerMembers { get; set; }
-
-    [JsonPropertyName("requests_mutual_friends")]
-    public bool? FriendRequestsMutualFriends { get; set; }
+    [JsonPropertyName("changed")]
+    public EditAccountRequest? Changed { get; set; }
 }

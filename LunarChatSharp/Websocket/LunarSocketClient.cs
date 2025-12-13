@@ -189,7 +189,7 @@ public class LunarSocketClient
                         State.Channels = new ConcurrentDictionary<string, RestChannel>(Channels);
                         foreach (var i in State.PrivateChannels)
                         {
-                            State.Channels.TryAdd(i.Key, i.Value);
+                            State.Channels.TryAdd(i.Value.Id, i.Value);
                         }
 
                         State.Roles = new ConcurrentDictionary<string, RestRole>(Roles);
@@ -859,8 +859,32 @@ public class LunarSocketClient
                 case "account_update":
                     {
                         AccountUpdateEvent? data = payload.Deserialize<AccountUpdateEvent>(JsonOptions);
-                        if (data == null)
+                        if (data == null || data.Changed == null)
                             return;
+
+                        if (data.Changed.FriendRequestAccess != null)
+                        {
+                            if (data.Changed.FriendRequestAccess.Everyone.HasValue)
+                                State.Account.FriendRequestAccess.Everyone = data.Changed.FriendRequestAccess.Everyone.Value;
+
+                            if (data.Changed.FriendRequestAccess.MutualServers.HasValue)
+                                State.Account.FriendRequestAccess.MutualServers = data.Changed.FriendRequestAccess.MutualServers.Value;
+
+                            if (data.Changed.FriendRequestAccess.MutualFriends.HasValue)
+                                State.Account.FriendRequestAccess.MutualFriends = data.Changed.FriendRequestAccess.MutualFriends.Value;
+                        }
+
+                        if (data.Changed.DirectMessagesAccess != null)
+                        {
+                            if (data.Changed.DirectMessagesAccess.Everyone.HasValue)
+                                State.Account.DirectMessagesAccess.Everyone = data.Changed.DirectMessagesAccess.Everyone.Value;
+
+                            if (data.Changed.DirectMessagesAccess.MutualServers.HasValue)
+                                State.Account.DirectMessagesAccess.MutualServers = data.Changed.DirectMessagesAccess.MutualServers.Value;
+
+                            if (data.Changed.DirectMessagesAccess.MutualFriends.HasValue)
+                                State.Account.DirectMessagesAccess.MutualFriends = data.Changed.DirectMessagesAccess.MutualFriends.Value;
+                        }
 
                         Client.OnAccountUpdate?.Invoke(data);
                     }
