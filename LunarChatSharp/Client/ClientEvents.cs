@@ -54,10 +54,13 @@ public class ClientEvents
 
     public Func<Task>? OnReady;
     public Func<RestChannel, Task>? OnDMCreate;
+    public Func<RestChannel, Task>? OnDMDelete;
     public Func<RestChannel, UpdateChannelRequest, Task>? OnDMUpdate;
     public Func<RestChannel, Task>? OnGroupCreate;
     public Func<RestChannel, UpdateChannelRequest, Task>? OnGroupUpdate;
     public Func<RestChannel, Task>? OnGroupDelete;
+    public Func<RestChannel, RestUser, Task>? OnGroupAddUser;
+    public Func<RestChannel, string, Task>? OnGroupRemoveUser;
 
     public Func<RestChannel, RestWebhook, Task>? OnWebhookCreate;
     public Func<RestChannel, string, EditWebhookRequest, Task>? OnWebhookUpdate;

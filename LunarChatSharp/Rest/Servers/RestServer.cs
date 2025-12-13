@@ -21,6 +21,9 @@ public class RestServer
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
 
+    [JsonPropertyName("vanity_invite")]
+    public string? VanityInvite { get; set; }
+
     [JsonPropertyName("system_messages")]
     public required RestServerSystemMessages SystemMessages { get; set; }
 

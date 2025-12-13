@@ -7,6 +7,7 @@ using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
 using LunarChatSharp.Websocket.Events.Account;
 using LunarChatSharp.Websocket.Events.Channels;
+using LunarChatSharp.Websocket.Events.Groups;
 using LunarChatSharp.Websocket.Events.Members;
 using LunarChatSharp.Websocket.Events.Messages;
 using LunarChatSharp.Websocket.Events.Roles;
@@ -288,6 +289,12 @@ public class LunarSocketClient
                         if (data.Changed.DefaultPermissions != null)
                             server.Server.DefaultPermissions = data.Changed.DefaultPermissions;
 
+                        if (data.Changed.VanityInvite != null)
+                            server.Server.VanityInvite = data.Changed.VanityInvite;
+
+                        if (!string.IsNullOrEmpty(data.Changed.OwnerId))
+                            server.Server.OwnerId = data.Changed.OwnerId;
+
                         if (data.Changed.IsDiscoverable.HasValue)
                         {
                             if (data.Changed.IsDiscoverable.Value)
@@ -324,8 +331,13 @@ public class LunarSocketClient
                         }
 
                         Client.OnServerUpdate?.Invoke(server.Server, data);
-                        if (data.Changed.DefaultPermissions != null && State.CurrentServer != null)
-                            State.CurrentServer?.OnPermissionUpdate?.Invoke();
+                        if (State.CurrentServer != null)
+                        {
+                            if (data.Changed.DefaultPermissions != null)
+                                State.CurrentServer?.OnPermissionUpdate?.Invoke();
+                            else if (!string.IsNullOrEmpty(data.Changed.OwnerId))
+                                State.CurrentServer?.OnPermissionUpdate?.Invoke();
+                        }
                     }
                     break;
                 case "server_delete":
@@ -592,11 +604,9 @@ public class LunarSocketClient
                         {
                             State.Channels.TryRemove(channel.Id, out _);
                             State.PrivateChannels.TryRemove(channel.Id, out _);
-                            if (channel.Type == ChannelType.Direct)
-                            {
 
-                            }
-                            //Client.OnDMCreate?.Invoke(data.Channel);
+                            if (channel.Type == ChannelType.Direct)
+                                Client.OnDMDelete?.Invoke(channel);
                             else
                                 Client.OnGroupDelete?.Invoke(channel);
                         }
@@ -614,7 +624,7 @@ public class LunarSocketClient
                 case "channel_update":
                     {
                         ChannelUpdateEvent? data = payload.Deserialize<ChannelUpdateEvent>(JsonOptions);
-                        if (data == null)
+                        if (data == null || data.Changed == null)
                             return;
 
                         if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
@@ -629,10 +639,20 @@ public class LunarSocketClient
                                 channel.Topic = data.Changed.Topic;
                         }
 
-                        if (channel.Type == ChannelType.Direct)
-                            Client.OnDMUpdate?.Invoke(channel, data.Changed);
-                        else
-                            Client.OnGroupUpdate?.Invoke(channel, data.Changed);
+                        switch (channel.Type)
+                        {
+                            case ChannelType.Direct:
+                                Client.OnDMUpdate?.Invoke(channel, data.Changed);
+                                break;
+                            case ChannelType.Group:
+                                {
+                                    if (!string.IsNullOrEmpty(data.Changed.OwnerId))
+                                        channel.GroupSettings?.OwnerId = data.Changed.OwnerId;
+
+                                    Client.OnGroupUpdate?.Invoke(channel, data.Changed);
+                                }
+                                break;
+                        }
 
                         if (State.CurrentServer != null && !string.IsNullOrEmpty(channel.ServerId) && State.CurrentServer.Server.Id == channel.ServerId)
                             State.CurrentServer.OnChannelUpdate?.Invoke(channel, data.Changed);
@@ -665,6 +685,38 @@ public class LunarSocketClient
 
                 #endregion
 
+                #region Groups
+                case "group_user_add":
+                    {
+                        GroupAddUserEvent? data = payload.Deserialize<GroupAddUserEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        channel.Users.Add(data.User);
+
+                        Client.OnGroupAddUser?.Invoke(channel, data.User);
+                    }
+                    break;
+                case "group_user_remove":
+                    {
+                        GroupRemoveUserEvent? data = payload.Deserialize<GroupRemoveUserEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        var item = channel.Users.FirstOrDefault(x => x.Id == data.UserId);
+                        if (item != null)
+                            channel.Users.Remove(item);
+
+                        Client.OnGroupRemoveUser?.Invoke(channel, data.UserId);
+                    }
+                    break;
+                #endregion
                 #region Emojis
                 case "emoji_create":
                     {

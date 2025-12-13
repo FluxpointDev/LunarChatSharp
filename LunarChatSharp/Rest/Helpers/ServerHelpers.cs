@@ -11,6 +11,15 @@ public static class ServerHelpers
         return await rest.PostAsync<RestCreatedServer>("/servers", request);
     }
 
+    public static async Task<RestAuditLog[]> GetAuditLogsAsync(this LunarRestClient rest, string serverId)
+    {
+        RestAuditLog[]? audit = await rest.GetAsync<RestAuditLog[]>($"/servers/{serverId}/audit-logs");
+        if (audit == null)
+            return Array.Empty<RestAuditLog>();
+
+        return audit;
+    }
+
     public static async Task<RestServer?> GetServerAsync(this LunarRestClient rest, string serverId)
     {
         return await rest.GetAsync<RestServer>($"/servers/{serverId}");

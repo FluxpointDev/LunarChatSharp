@@ -19,4 +19,10 @@ public class EditServerRequest : ILunarRequest
 
     [JsonPropertyName("is_discoverable")]
     public bool? IsDiscoverable { get; set; }
+
+    [JsonPropertyName("vanity_invite")]
+    public string? VanityInvite { get; set; }
+
+    [JsonPropertyName("owner_id")]
+    public string? OwnerId { get; set; }
 }
