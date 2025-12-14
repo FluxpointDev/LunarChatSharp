@@ -1,5 +1,74 @@
-﻿namespace LunarChatSharp.Rest.Servers;
+﻿using LunarChatSharp.Rest.Users;
+using System.Text.Json.Serialization;
+
+namespace LunarChatSharp.Rest.Servers;
 
 public class RestAuditLog
 {
+    [JsonPropertyName("target_id")]
+    public required string TargetId { get; set; }
+
+    [JsonPropertyName("target_type")]
+    public required TargetType? TargetType { get; set; }
+
+    [JsonPropertyName("user_id")]
+    public required string UserId { get; set; }
+
+    [JsonPropertyName("action_type")]
+    public required ActionType? ActionType { get; set; }
+
+    [JsonPropertyName("changes")]
+    public List<AuditLogChange> Changes { get; set; }
+
+    [JsonPropertyName("action_at")]
+    public required DateTime? ActionAt { get; set; }
+
+    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string? targetId)
+    {
+        return new RestAuditLog
+        {
+            ActionType = actionType,
+            TargetId = targetId,
+            TargetType = targetType,
+            UserId = currentUser.Id,
+            Changes = new List<AuditLogChange>(),
+            ActionAt = DateTime.UtcNow
+        };
+    }
+
+    public void AddChange(PropertyType property, string oldValue, string newValue)
+    {
+        Changes.Add(new AuditLogChange
+        {
+            OldValue = oldValue,
+            NewValue = newValue,
+            PropertyType = property
+        });
+    }
+
+}
+public enum ActionType
+{
+    ServerUpdate, ChannelCreated, ChannelUpdated, ChannelDeleted, MemberBanned, MemberUpdate, MemberUnbanned, MemberKicked, AppAdded, AppRemoved,
+    RoleCreated, RoleUpdated, RoleDeleted, InviteCreated, InviteDeleted, WebhookCreated, WebhookUpdated, WebhookDeleted, EmojiCreated, EmojiUpdated,
+    EmojiDeleted, BulkMessagesDeleted, MessagePinned, MessageUnpinned
+}
+public enum TargetType
+{
+    Server, Member, Invite, Role, Channel, Webhook, Emoji, Message, App,
+}
+public class AuditLogChange
+{
+    [JsonPropertyName("old_value")]
+    public string? OldValue { get; set; }
+
+    [JsonPropertyName("new_value")]
+    public string? NewValue { get; set; }
+
+    [JsonPropertyName("property_type")]
+    public PropertyType? PropertyType;
+}
+public enum PropertyType
+{
+    Name, Description
 }

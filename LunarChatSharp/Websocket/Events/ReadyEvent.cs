@@ -59,7 +59,7 @@ public class ServerState
     public RestServer Server { get; set; }
 
     [JsonIgnore]
-    public ConcurrentDictionary<string, List<RestMessage>> Messages = new ConcurrentDictionary<string, List<RestMessage>>();
+    public List<RestAuditLog> AuditLogs = new List<RestAuditLog>();
 
     [JsonPropertyName("channels")]
     public ConcurrentDictionary<string, RestChannel> Channels { get; set; } = new ConcurrentDictionary<string, RestChannel>();
@@ -69,6 +69,14 @@ public class ServerState
 
     [JsonPropertyName("emojis")]
     public ConcurrentDictionary<string, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<string, RestEmoji>();
+
+    public void PushAuditLog(RestAuditLog auditLog)
+    {
+        if (AuditLogs.Count >= 101)
+            AuditLogs.RemoveAt(100);
+
+        AuditLogs.Add(auditLog);
+    }
 
     public bool HasPermission(RestMember member, ServerPermission permission)
     {
