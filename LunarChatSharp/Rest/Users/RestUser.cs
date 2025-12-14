@@ -14,6 +14,9 @@ public class RestUser
     [JsonPropertyName("discriminator")]
     public required string? Discriminator { get; set; }
 
+    [JsonPropertyName("about_me")]
+    public string? AboutMe { get; set; }
+
     [JsonPropertyName("display_name")]
     public string? DisplayName { get; set; }
 

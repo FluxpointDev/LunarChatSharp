@@ -15,6 +15,9 @@ public class CreateAccountRequest : ILunarRequest
 }
 public class EditAccountRequest : ILunarRequest
 {
+    [JsonPropertyName("about_me")]
+    public string? AboutMe { get; set; }
+
     [JsonPropertyName("friend_request_access")]
     public EditFriendRequestAccess? FriendRequestAccess { get; set; }
 

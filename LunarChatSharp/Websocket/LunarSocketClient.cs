@@ -914,6 +914,14 @@ public class LunarSocketClient
                         if (data == null || data.Changed == null)
                             return;
 
+                        //if (data.Changed.AboutMe != null)
+                        //{
+                        //    data.Changed.AboutMe = data.Changed.AboutMe.Trim();
+
+
+                        //    State.AboutMe = data.Changed.AboutMe.ToNullOrString();
+                        //}
+
                         if (data.Changed.FriendRequestAccess != null)
                         {
                             if (data.Changed.FriendRequestAccess.Everyone.HasValue)

@@ -12,6 +12,11 @@ public static class UserHelpers
         return Json;
     }
 
+    public static async Task<RestUser?> GetUserAsync(this LunarRestClient rest, string userId)
+    {
+        return await rest.GetAsync<RestUser>($"/users/{userId}");
+    }
+
     public static async Task RemoveBlockAsync(this LunarRestClient rest, string userId)
     {
         await rest.DeleteAsync($"/users/{userId}/block");
