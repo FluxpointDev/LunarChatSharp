@@ -1,4 +1,4 @@
-﻿using LunarChatSharp.Rest.Users;
+﻿using LunarChatSharp.Rest.Messages;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Websocket.Events.Messages;
@@ -8,17 +8,14 @@ public class MessageUpdateEvent : ISocketEvent
     [JsonPropertyName("type")]
     public string Type { get; set; } = "message_update";
 
-    [JsonPropertyName("id")]
-    public required string? Id { get; set; }
+    [JsonPropertyName("message_id")]
+    public required string? MessageId { get; set; }
 
-    [JsonPropertyName("content")]
-    public string? Content { get; set; }
+    [JsonPropertyName("changed")]
+    public required EditMessageRequest? Changed { get; set; }
 
     [JsonPropertyName("channel_id")]
     public required string? ChannelId { get; set; }
-
-    [JsonPropertyName("author")]
-    public required RestUser? Author { get; set; }
 
     [JsonPropertyName("updated_at")]
     public required DateTime? UpdatedAt { get; set; }

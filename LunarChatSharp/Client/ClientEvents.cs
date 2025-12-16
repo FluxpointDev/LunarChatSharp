@@ -6,6 +6,7 @@ using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Rest.Webhooks;
 using LunarChatSharp.Websocket.Events.Account;
+using LunarChatSharp.Websocket.Events.Messages;
 using LunarChatSharp.Websocket.Events.Roles;
 using LunarChatSharp.Websocket.Events.Servers;
 
@@ -24,7 +25,7 @@ public class ClientEvents
     public Func<RestRelation, RelationUpdateEvent, Task>? OnRelationUpdate;
     public Func<RestRelation, Task>? OnRelationRemove;
 
-    public Func<RestChannel, RestMessage, Task>? OnMessageEdit;
+    public Func<RestChannel, MessageUpdateEvent, EditMessageRequest, Task>? OnMessageEdit;
     public Func<RestChannel, RestMessage, Task>? OnMessageDelete;
     public Func<RestUserPresence, Task>? OnPresenceUpdate;
     public Func<AccountUpdateEvent, Task>? OnAccountUpdate;

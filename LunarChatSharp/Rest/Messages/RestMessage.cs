@@ -29,4 +29,7 @@ public class RestMessage
 
     [JsonPropertyName("system_message")]
     public SystemMessageType? SystemMessage { get; set; }
+
+    [JsonPropertyName("embeds")]
+    public RestEmbed[]? Embeds { get; set; }
 }

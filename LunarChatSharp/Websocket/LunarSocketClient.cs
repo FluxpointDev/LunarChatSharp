@@ -226,15 +226,7 @@ public class LunarSocketClient
                         if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
                             return;
 
-                        _ = Client.OnMessageEdit?.Invoke(channel, new RestMessage
-                        {
-                            Author = data.Author,
-                            ChannelId = data.ChannelId,
-                            Content = data.Content.ToNullOrString(),
-                            Id = data.Id,
-                            CreatedAt = DateTime.Now,
-                            UpdatedAt = data.UpdatedAt
-                        });
+                        _ = Client.OnMessageEdit?.Invoke(channel, data, data.Changed);
                     }
                     break;
                 case "message_delete":
