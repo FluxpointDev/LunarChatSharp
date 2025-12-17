@@ -1,5 +1,7 @@
 ﻿using LunarChatSharp.Core.Channels;
+using LunarChatSharp.Rest.Dev;
 using LunarChatSharp.Rest.Users;
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Channels;
@@ -34,4 +36,7 @@ public class RestGroupSettings
 {
     [JsonPropertyName("owner_id")]
     public string? OwnerId { get; set; }
+
+    [JsonPropertyName("apps")]
+    public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();
 }

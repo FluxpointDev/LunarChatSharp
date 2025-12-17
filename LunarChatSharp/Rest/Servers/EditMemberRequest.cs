@@ -2,13 +2,10 @@
 
 namespace LunarChatSharp.Rest.Servers;
 
-public class EditMemberRequest : ILunarRequest
+public class EditMemberRequest : ReasonRequest
 {
     [JsonPropertyName("nickname")]
     public string? Nickname { get; set; }
-
-    //[JsonPropertyName("reason")]
-    //public string? Reason { get; set; }
 
     [JsonPropertyName("timeout")]
     public DateTime? Timeout { get; set; }

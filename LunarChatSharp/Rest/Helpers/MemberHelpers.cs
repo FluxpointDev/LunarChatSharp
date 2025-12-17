@@ -45,14 +45,14 @@ public static class MemberHelpers
         await rest.DeleteAsync($"/servers/{serverId}/members/{userId}/roles/{roleId}");
     }
 
-    public static async Task KickMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task KickMemberAsync(this LunarRestClient rest, string serverId, string userId, ReasonRequest req)
     {
-        await rest.DeleteAsync($"/servers/{serverId}/members/{userId}");
+        await rest.DeleteAsync($"/servers/{serverId}/members/{userId}", req);
     }
 
-    public static async Task<RestBan> BanMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task<RestBan> BanMemberAsync(this LunarRestClient rest, string serverId, string userId, CreateBanRequest req)
     {
-        return await rest.PutAsync<RestBan>($"/servers/{serverId}/bans/{userId}");
+        return await rest.PutAsync<RestBan>($"/servers/{serverId}/bans/{userId}", req);
     }
 
     public static async Task<RestBan> UnbanMemberAsync(this LunarRestClient rest, string serverId, string userId)
@@ -65,9 +65,13 @@ public static class MemberHelpers
         return await rest.PatchAsync<RestMember>($"/servers/{serverId}/members/{userId}", request);
     }
 
-    public static async Task<RestMember> TimeoutMemberAsync(this LunarRestClient rest, string serverId, string userId, DateTime? time)
+    public static async Task<RestMember> TimeoutMemberAsync(this LunarRestClient rest, string serverId, string userId, DateTime? time, string? reason)
     {
-        var req = new EditMemberRequest();
+        var req = new EditMemberRequest
+        {
+            Reason = reason
+        };
+
         if (time == null)
             req.TimeoutRemove = true;
         else

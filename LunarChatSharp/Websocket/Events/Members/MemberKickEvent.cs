@@ -11,6 +11,9 @@ public class MemberKickEvent : ISocketEvent
     [JsonPropertyName("server_id")]
     public required string? ServerId { get; set; }
 
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
+
     [JsonPropertyName("member")]
     public required RestMember? Member { get; set; }
 }

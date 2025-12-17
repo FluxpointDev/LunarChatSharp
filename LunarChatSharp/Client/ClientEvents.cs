@@ -38,9 +38,9 @@ public class ClientEvents
     public Func<RestServer, RestEmoji, EmojiUpdateEvent, Task>? OnEmojiUpdate;
     public Func<RestServer, RestEmoji, Task>? OnEmojiDelete;
 
-    public Func<RestServer, RestApp, Task>? OnAppAdd;
-    public Func<RestServer, RestApp, AppUpdatedEvent, Task>? OnAppUpdate;
-    public Func<RestServer, RestApp, Task>? OnAppRemove;
+    public Func<RestServer?, RestChannel?, RestApp, Task>? OnAppAdd;
+    public Func<RestServer?, RestChannel?, RestApp, CreateAppRequest, Task>? OnAppUpdate;
+    public Func<RestServer?, RestChannel?, RestApp, Task>? OnAppRemove;
 
     public Func<RestServer, RestInvite, Task>? OnInviteCreate;
     public Func<RestServer, string, Task>? OnInviteDelete;

@@ -16,4 +16,7 @@ public class RestBan
 
     [JsonPropertyName("target_user")]
     public required RestUser? TargetUser { get; set; }
+
+    [JsonPropertyName("expires_at")]
+    public DateTime? ExpiresAt { get; set; }
 }

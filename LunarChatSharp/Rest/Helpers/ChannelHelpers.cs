@@ -1,10 +1,20 @@
 ﻿using LunarChatSharp.Rest;
 using LunarChatSharp.Rest.Channels;
+using LunarChatSharp.Rest.Dev;
 
 namespace LunarChatSharp;
 
 public static class ChannelHelpers
 {
+    public static async Task<RestApp[]> GetGroupAppsAsync(this LunarRestClient rest, string groupId)
+    {
+        var apps = await rest.GetAsync<RestApp[]>($"/groups/{groupId}/apps");
+        if (apps == null)
+            return Array.Empty<RestApp>();
+
+        return apps;
+    }
+
     public static async Task<RestChannel> CreateChannelAsync(this LunarRestClient rest, CreateChannelRequest request)
     {
         return await rest.PostAsync<RestChannel>($"/channels", request);

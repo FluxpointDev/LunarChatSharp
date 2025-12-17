@@ -10,6 +10,10 @@ public static class Static
     public static int MaxLinkLength = 300;
     public static int MaxMessageContentLength = 2048;
     public static int MaxWebhooks = 10;
+    public static int MaxInviteAgeMinutes = 10080;
+    public static int MaxInviteUses = 1000;
+    public static int MaxBanDays = 30;
+    public static int MaxGroupUsers = 25;
     public static bool IsLink(string? text)
     {
 

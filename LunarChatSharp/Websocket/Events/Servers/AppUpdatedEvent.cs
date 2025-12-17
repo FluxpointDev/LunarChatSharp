@@ -9,7 +9,10 @@ public class AppUpdatedEvent : ISocketEvent
     public string Type { get; set; } = "app_update";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public string? ServerId { get; set; }
+
+    [JsonPropertyName("group_id")]
+    public string? GroupId { get; set; }
 
     [JsonPropertyName("app_id")]
     public required string? AppId { get; set; }

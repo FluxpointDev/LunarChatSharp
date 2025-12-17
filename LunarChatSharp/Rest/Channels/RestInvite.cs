@@ -22,4 +22,13 @@ public class RestInvite
 
     [JsonPropertyName("created_at")]
     public required DateTime? CreatedAt { get; set; }
+
+    [JsonPropertyName("max_age")]
+    public int MaxAge { get; set; }
+
+    [JsonPropertyName("max_uses")]
+    public int MaxUses { get; set; }
+
+    [JsonPropertyName("expires_at")]
+    public DateTime? ExpiresAt { get; set; }
 }

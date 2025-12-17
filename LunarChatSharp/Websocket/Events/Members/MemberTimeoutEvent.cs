@@ -15,5 +15,8 @@ public class MemberTimeoutEvent : ISocketEvent
     public required RestMember? Member { get; set; }
 
     [JsonPropertyName("timeout")]
-    public DateTime? Timeout { get; set; }
+    public required DateTime? Timeout { get; set; }
+
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 }

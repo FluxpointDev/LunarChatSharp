@@ -13,10 +13,21 @@ public static class DevHelpers
             AppId = appId,
         });
     }
-
     public static async Task RemoveServerAppAsync(this LunarRestClient rest, string serverId, string appId)
     {
         await rest.DeleteAsync($"/servers/{serverId}/apps/{appId}");
+    }
+
+    public static async Task AddGroupAppAsync(this LunarRestClient rest, string groupId, string appId)
+    {
+        await rest.PutAsync($"/groups/{groupId}/apps", new InviteAppRequest
+        {
+            AppId = appId,
+        });
+    }
+    public static async Task RemoveGroupAppAsync(this LunarRestClient rest, string groupId, string appId)
+    {
+        await rest.DeleteAsync($"/groups/{groupId}/apps/{appId}");
     }
 
     public static async Task<RestApp> EditAppAsync(this LunarRestClient rest, string appId, CreateAppRequest request)

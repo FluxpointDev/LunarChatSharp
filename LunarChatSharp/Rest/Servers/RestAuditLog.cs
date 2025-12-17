@@ -8,11 +8,17 @@ public class RestAuditLog
     [JsonPropertyName("target_id")]
     public required string TargetId { get; set; }
 
+    [JsonPropertyName("target_name")]
+    public required string TargetName { get; set; }
+
     [JsonPropertyName("target_type")]
     public required TargetType? TargetType { get; set; }
 
     [JsonPropertyName("user_id")]
     public required string UserId { get; set; }
+
+    [JsonPropertyName("user_name")]
+    public required string UserName { get; set; }
 
     [JsonPropertyName("action_type")]
     public required ActionType? ActionType { get; set; }
@@ -23,14 +29,16 @@ public class RestAuditLog
     [JsonPropertyName("action_at")]
     public required DateTime? ActionAt { get; set; }
 
-    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string? targetId)
+    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string? targetId, string? targetName)
     {
         return new RestAuditLog
         {
             ActionType = actionType,
             TargetId = targetId,
+            TargetName = targetName,
             TargetType = targetType,
             UserId = currentUser.Id,
+            UserName = currentUser.GetCurrentNameDiscrim(),
             Changes = new List<AuditLogChange>(),
             ActionAt = DateTime.UtcNow
         };

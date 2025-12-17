@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Rest;
 using LunarChatSharp.Rest.Channels;
+using LunarChatSharp.Rest.Servers;
 
 namespace LunarChatSharp;
 
@@ -20,9 +21,9 @@ public static class InviteHelpers
         return await rest.GetAsync<RestInvite[]>($"/servers/{serverId}/invites");
     }
 
-    public static async Task<RestInvite> CreateInviteAsync(this LunarRestClient rest, string channelId)
+    public static async Task<RestInvite> CreateInviteAsync(this LunarRestClient rest, string channelId, CreateInviteRequest request)
     {
-        return await rest.PostAsync<RestInvite>($"/channels/{channelId}/invites");
+        return await rest.PostAsync<RestInvite>($"/channels/{channelId}/invites", request);
     }
 
     public static async Task DeleteInviteAsync(this LunarRestClient rest, string channelId, string inviteCode)

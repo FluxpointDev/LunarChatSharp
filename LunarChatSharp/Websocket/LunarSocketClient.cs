@@ -1,8 +1,10 @@
 ﻿using LunarChatSharp.Core.Channels;
 using LunarChatSharp.Core.Servers;
 using LunarChatSharp.Rest.Channels;
+using LunarChatSharp.Rest.Dev;
 using LunarChatSharp.Rest.Messages;
 using LunarChatSharp.Rest.Roles;
+using LunarChatSharp.Rest.Servers;
 using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Websocket.Events;
 using LunarChatSharp.Websocket.Events.Account;
@@ -770,12 +772,16 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
-                            return;
-
-                        server.Apps.TryAdd(data.App.Id, data.App);
-
-                        Client.OnAppAdd?.Invoke(server.Server, data.App);
+                        if (!string.IsNullOrEmpty(data.ServerId) && State.Servers.TryGetValue(data.ServerId, out var server))
+                        {
+                            server.Apps.TryAdd(data.App.Id, data.App);
+                            Client.OnAppAdd?.Invoke(server.Server, null, data.App);
+                        }
+                        else if (!string.IsNullOrEmpty(data.GroupId) && State.PrivateChannels.TryGetValue(data.GroupId, out var group))
+                        {
+                            group.GroupSettings.Apps.TryAdd(data.App.Id, data.App);
+                            Client.OnAppAdd?.Invoke(null, group, data.App);
+                        }
                     }
                     break;
                 case "app_update":
@@ -784,10 +790,20 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
-                            return;
-
-                        if (!server.Apps.TryRemove(data.AppId, out var app))
+                        RestServer? server = null;
+                        RestChannel? group = null;
+                        RestApp? app = null;
+                        if (!string.IsNullOrEmpty(data.ServerId) && State.Servers.TryGetValue(data.ServerId, out var sv))
+                        {
+                            server = sv.Server;
+                            sv.Apps.TryGetValue(data.AppId, out app);
+                        }
+                        else if (!string.IsNullOrEmpty(data.GroupId) && State.PrivateChannels.TryGetValue(data.GroupId, out group))
+                        {
+                            if (group.GroupSettings != null)
+                                group.GroupSettings.Apps.TryGetValue(data.AppId, out app);
+                        }
+                        if (app == null)
                             return;
 
                         if (data.Changed != null)
@@ -801,7 +817,7 @@ public class LunarSocketClient
                         }
 
 
-                        Client.OnAppUpdate?.Invoke(server.Server, app, data);
+                        Client.OnAppUpdate?.Invoke(server, group, app, data.Changed);
                     }
                     break;
                 case "app_remove":
@@ -810,13 +826,23 @@ public class LunarSocketClient
                         if (data == null)
                             return;
 
-                        if (!State.Servers.TryGetValue(data.ServerId, out var server))
-                            return;
+                        if (!string.IsNullOrEmpty(data.ServerId) && State.Servers.TryGetValue(data.ServerId, out var server))
+                        {
+                            if (!server.Apps.TryRemove(data.AppId, out var app))
+                                return;
 
-                        if (!server.Apps.TryRemove(data.AppId, out var app))
-                            return;
+                            Client.OnAppRemove?.Invoke(server.Server, null, app);
+                        }
+                        else if (!string.IsNullOrEmpty(data.GroupId) && State.PrivateChannels.TryGetValue(data.GroupId, out var group))
+                        {
+                            if (group.GroupSettings == null)
+                                return;
 
-                        Client.OnAppRemove?.Invoke(server.Server, app);
+                            if (!group.GroupSettings.Apps.TryRemove(data.AppId, out var app))
+                                return;
+
+                            Client.OnAppRemove?.Invoke(null, group, app);
+                        }
                     }
                     break;
                 #endregion
