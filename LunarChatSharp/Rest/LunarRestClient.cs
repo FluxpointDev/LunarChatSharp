@@ -37,7 +37,7 @@ public class LunarRestClient
     public Task<HttpResponseMessage> SendRequestAsync(RequestType method, string endpoint, ILunarRequest? json = null)
     => InternalRequest(GetMethod(method), endpoint, json);
 
-    public Task<TResponse?> SendRequestAsync<TResponse>(RequestType method, string endpoint, Dictionary<string, object> json) where TResponse : class
+    public Task<TResponse?> SendRequestAsync<TResponse>(RequestType method, string endpoint, Dictionary<string, object>? json) where TResponse : class
         => InternalJsonRequest<TResponse>(GetMethod(method), endpoint, json);
 
     public Task<TResponse?> SendRequestAsync<TResponse>(RequestType method, string endpoint, Dictionary<string, string> json) where TResponse : class
@@ -64,8 +64,14 @@ public class LunarRestClient
     public Task PutAsync(string endpoint, ILunarRequest json = null)
         => SendRequestAsync(RequestType.Put, endpoint, json);
 
+    public Task<TResponse> PostAsync<TResponse>(string endpoint, MultipartFormDataContent form = null, bool isWebhookRequest = false) where TResponse : class
+        => InternalJsonRequest<TResponse>(HttpMethod.Post, endpoint, form, false, isWebhookRequest)!;
+
     public Task<TResponse> PostAsync<TResponse>(string endpoint, ILunarRequest json = null, bool isWebhookRequest = false) where TResponse : class
         => SendRequestAsync<TResponse>(RequestType.Post, endpoint, json, false, isWebhookRequest)!;
+
+    public Task<TResponse> PostAsync<TResponse>(string endpoint) where TResponse : class
+        => SendRequestAsync<TResponse>(RequestType.Post, endpoint);
 
     public Task PostAsync(string endpoint, ILunarRequest json = null)
         => SendRequestAsync(RequestType.Post, endpoint, json);
@@ -92,12 +98,12 @@ public class LunarRestClient
         return HttpMethod.Get;
     }
 
-    private static JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+    internal static JsonSerializerOptions JsonOptions = new JsonSerializerOptions
     {
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault,
     };
 
-    private static MediaTypeHeaderValue JsonHeader = new MediaTypeHeaderValue("application/json");
+    internal static MediaTypeHeaderValue JsonHeader = new MediaTypeHeaderValue("application/json");
 
     internal async Task<HttpResponseMessage> InternalRequest(HttpMethod method, string endpoint, object? request)
     {
@@ -171,7 +177,10 @@ public class LunarRestClient
         HttpRequestMessage Mes = new HttpRequestMessage(method, isWebhookRequest ? endpoint : Url + endpoint);
         if (request != null)
         {
-            Mes.Content = JsonContent.Create(request, mediaType: JsonHeader, options: JsonOptions);
+            if (request is MultipartFormDataContent part)
+                Mes.Content = part;
+            else
+                Mes.Content = JsonContent.Create(request, mediaType: JsonHeader, options: JsonOptions);
         }
         HttpResponseMessage Req = await Http.SendAsync(Mes);
 
@@ -254,4 +263,5 @@ public class LunarRestClient
         }
         return Response;
     }
+
 }

@@ -25,4 +25,7 @@ public class EditServerRequest : ILunarRequest
 
     [JsonPropertyName("owner_id")]
     public string? OwnerId { get; set; }
+
+    [JsonPropertyName("icon")]
+    public string? Icon { get; set; }
 }

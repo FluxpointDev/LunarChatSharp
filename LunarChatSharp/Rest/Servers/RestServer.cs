@@ -12,6 +12,9 @@ public class RestServer
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("icon_id")]
+    public string? IconId { get; set; }
+
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 

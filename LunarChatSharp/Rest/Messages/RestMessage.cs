@@ -32,4 +32,7 @@ public class RestMessage
 
     [JsonPropertyName("embeds")]
     public RestEmbed[]? Embeds { get; set; }
+
+    [JsonPropertyName("attachments")]
+    public RestAttachment[]? Attachments { get; set; }
 }
