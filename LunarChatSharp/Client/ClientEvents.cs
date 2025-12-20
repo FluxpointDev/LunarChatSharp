@@ -67,7 +67,7 @@ public class ClientEvents
     public Func<RestChannel, string, EditWebhookRequest, Task>? OnWebhookUpdate;
     public Func<RestChannel, string, Task>? OnWebhookDelete;
 
-    public Func<RestChannel, Task> OnChannelCreate;
-    public Func<RestChannel, Task> OnChannelDelete;
-    public Func<RestChannel, UpdateChannelRequest, Task> OnChannelUpdate;
+    public Func<RestChannel, Task>? OnChannelCreate;
+    public Func<RestChannel, Task>? OnChannelDelete;
+    public Func<RestChannel, UpdateChannelRequest, Task>? OnChannelUpdate;
 }

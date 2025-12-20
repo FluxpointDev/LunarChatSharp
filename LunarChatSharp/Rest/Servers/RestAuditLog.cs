@@ -21,15 +21,15 @@ public class RestAuditLog
     public required string UserName { get; set; }
 
     [JsonPropertyName("action_type")]
-    public required ActionType? ActionType { get; set; }
+    public ActionType ActionType { get; set; }
 
     [JsonPropertyName("changes")]
     public List<AuditLogChange> Changes { get; set; }
 
     [JsonPropertyName("action_at")]
-    public required DateTime? ActionAt { get; set; }
+    public required DateTime ActionAt { get; set; }
 
-    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string? targetId, string? targetName)
+    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string targetId, string targetName)
     {
         return new RestAuditLog
         {
@@ -74,7 +74,7 @@ public class AuditLogChange
     public string? NewValue { get; set; }
 
     [JsonPropertyName("property_type")]
-    public PropertyType? PropertyType;
+    public required PropertyType PropertyType;
 }
 public enum PropertyType
 {

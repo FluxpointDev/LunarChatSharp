@@ -15,16 +15,16 @@ public class RestMember
     public string? Nickname { get; set; }
 
     [JsonPropertyName("roles")]
-    public required HashSet<string>? Roles { get; set; }
+    public required HashSet<string> Roles { get; set; }
 
     [JsonPropertyName("timeout")]
     public DateTime? Timeout { get; set; }
 
     [JsonPropertyName("joined_at")]
-    public required DateTime? JoinedAt { get; set; }
+    public required DateTime JoinedAt { get; set; }
 
     [JsonPropertyName("user")]
-    public required RestUser? User { get; set; }
+    public required RestUser User { get; set; }
 
     public string GetCurrentName()
     {

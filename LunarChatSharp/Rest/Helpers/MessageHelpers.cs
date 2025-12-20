@@ -22,7 +22,7 @@ public static class MessageHelpers
 
     public static async Task<RestMessage> SendMesssageAsync(this LunarRestClient rest, string channelId, CreateMessageRequest request)
     {
-        if (request.Attachments != null && request.Attachments.Any())
+        if (request.Attachments != null && request.Attachments.Length != 0)
         {
             MultipartFormDataContent form = new MultipartFormDataContent();
             var Json = JsonContent.Create(request, mediaType: LunarRestClient.JsonHeader, options: LunarRestClient.JsonOptions);

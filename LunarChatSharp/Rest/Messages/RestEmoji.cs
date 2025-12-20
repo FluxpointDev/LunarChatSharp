@@ -5,13 +5,13 @@ namespace LunarChatSharp.Rest.Messages;
 public class RestEmoji
 {
     [JsonPropertyName("id")]
-    public required string? Id { get; set; }
+    public required string Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("icon_id")]
-    public string? IconId { get; set; }
+    public required string IconId { get; set; }
 
     public string? GetIconUrl()
     {
@@ -22,8 +22,8 @@ public class RestEmoji
     }
 
     [JsonPropertyName("created_at")]
-    public DateTime? CreatedAt { get; set; }
+    public required DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("created_by")]
-    public string? CreatedBy { get; set; }
+    public required string CreatedBy { get; set; }
 }

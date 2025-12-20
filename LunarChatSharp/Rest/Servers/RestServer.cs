@@ -58,7 +58,7 @@ public class RestServer
     public string GetFallback()
     {
         string[] Split = Name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (!Split.Any())
+        if (Split.Length == 0)
             return null!;
 
         if (Split.Length == 1)

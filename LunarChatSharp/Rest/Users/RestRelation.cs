@@ -9,7 +9,7 @@ public class RestRelation
     public required string UserId { get; set; }
 
     [JsonPropertyName("username")]
-    public string Username { get; set; }
+    public required string Username { get; set; }
 
     [JsonPropertyName("display_name")]
     public string? DisplayName { get; set; }

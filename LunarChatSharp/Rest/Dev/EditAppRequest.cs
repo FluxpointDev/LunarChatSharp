@@ -5,7 +5,7 @@ namespace LunarChatSharp.Rest.Dev;
 public class EditAppRequest : ILunarRequest
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("description")]
     public string? Description { get; set; }

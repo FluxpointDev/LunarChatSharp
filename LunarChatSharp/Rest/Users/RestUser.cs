@@ -56,7 +56,7 @@ public class RestUser
     public string GetFallback()
     {
         string[] Split = GetCurrentName().Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (!Split.Any())
+        if (Split.Length == 0)
             return null!;
 
         if (Split.Length == 1)
