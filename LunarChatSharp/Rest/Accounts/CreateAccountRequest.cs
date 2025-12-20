@@ -18,11 +18,22 @@ public class EditAccountRequest : ILunarRequest
     [JsonPropertyName("about_me")]
     public string? AboutMe { get; set; }
 
+    [JsonPropertyName("avatar")]
+    public string? Avatar { get; set; }
+
     [JsonPropertyName("friend_request_access")]
     public EditFriendRequestAccess? FriendRequestAccess { get; set; }
 
     [JsonPropertyName("direct_messages_access")]
     public EditDirectMessagesAccess? DirectMessagesAccess { get; set; }
+
+    public string? GetAvatarUrl()
+    {
+        if (string.IsNullOrEmpty(Avatar))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{Avatar}/avatar.webp";
+    }
 }
 public class EditFriendRequestAccess
 {
@@ -50,4 +61,7 @@ public class CreateDemoAccountRequest : ILunarRequest
 {
     [JsonPropertyName("username")]
     public required string Username { get; set; }
+
+    [JsonPropertyName("avatar_type")]
+    public int AvatarType { get; set; }
 }

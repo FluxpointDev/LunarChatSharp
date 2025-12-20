@@ -31,11 +31,34 @@ public class RestChannel
 
     [JsonPropertyName("is_nsfw")]
     public bool IsNsfw { get; set; }
+
+    public string GetFallback()
+    {
+        string[] Split = Name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (!Split.Any())
+            return null!;
+
+        if (Split.Length == 1)
+            return Split[0].ToUpper()[0].ToString();
+
+        return $"{Split[0].ToUpper()[0]}{Split.Last().ToUpper()[0]}";
+    }
 }
 public class RestGroupSettings
 {
     [JsonPropertyName("owner_id")]
     public string? OwnerId { get; set; }
+
+    [JsonPropertyName("icon_id")]
+    public string? IconId { get; set; }
+
+    public string? GetIconUrl()
+    {
+        if (string.IsNullOrEmpty(IconId))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{IconId}/group.webp";
+    }
 
     [JsonPropertyName("apps")]
     public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();

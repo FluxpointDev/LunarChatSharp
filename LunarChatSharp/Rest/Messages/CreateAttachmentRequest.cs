@@ -21,7 +21,14 @@ public class CreateAttachmentRequest
         Set(stream, fileName, description, isSpoiler);
     }
 
-    internal void Set(Stream stream, string fileName, string? description, bool isSpoiler = false)
+    public static async Task<CreateAttachmentRequest> CreateFromStream(Stream stream, string fileName, string? description = "", bool isSpoiler = false)
+    {
+        CreateAttachmentRequest attach = new CreateAttachmentRequest();
+        await attach.Set(stream, fileName, description, isSpoiler);
+        return attach;
+    }
+
+    internal async Task Set(Stream stream, string fileName, string? description, bool isSpoiler = false)
     {
         FileName = fileName;
         Description = description;
@@ -39,7 +46,21 @@ public class CreateAttachmentRequest
             Content = new ByteArrayContent(memstr.ToArray());
         }
         else
-            throw new LunarException("Invalid attachment content");
+        {
+            byte[] bytes = new byte[stream.Length];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = await stream.ReadAsync(bytes, 0, bytes.Length)) > 0)
+                {
+                    ms.Write(bytes, 0, read);
+                }
+            }
+            Content = new ByteArrayContent(bytes);
+        }
+
+        if (Content == null)
+            throw new LunarException("Invalid file stream");
 
         if (fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");

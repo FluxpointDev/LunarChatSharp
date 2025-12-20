@@ -24,4 +24,15 @@ public class RestWebhook
 
     [JsonPropertyName("created_by")]
     public required string? CreatedBy { get; set; }
+
+    [JsonPropertyName("avatar_id")]
+    public string? AvatarId { get; set; }
+
+    public string? GetAvatarUrl()
+    {
+        if (string.IsNullOrEmpty(AvatarId))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{AvatarId}/avatar.webp";
+    }
 }

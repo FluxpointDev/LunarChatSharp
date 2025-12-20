@@ -10,6 +10,9 @@ public class UpdateChannelRequest : ILunarRequest
     [JsonPropertyName("topic")]
     public string? Topic { get; set; }
 
+    [JsonPropertyName("icon")]
+    public string? Icon { get; set; }
+
     [JsonPropertyName("owner_id")]
     public string? OwnerId { get; set; }
 }

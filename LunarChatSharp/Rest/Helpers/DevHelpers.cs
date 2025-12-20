@@ -30,7 +30,7 @@ public static class DevHelpers
         await rest.DeleteAsync($"/groups/{groupId}/apps/{appId}");
     }
 
-    public static async Task<RestApp> EditAppAsync(this LunarRestClient rest, string appId, CreateAppRequest request)
+    public static async Task<RestApp> EditAppAsync(this LunarRestClient rest, string appId, EditAppRequest request)
     {
         return await rest.PatchAsync<RestApp>($"/apps/{appId}", request);
     }
@@ -45,7 +45,7 @@ public static class DevHelpers
         return await rest.PostAsync<RestTeam>("/teams", request);
     }
 
-    public static async Task<RestTeam> EditTeamAsync(this LunarRestClient rest, string teamId, CreateTeamRequest request)
+    public static async Task<RestTeam> EditTeamAsync(this LunarRestClient rest, string teamId, EditTeamRequest request)
     {
         return await rest.PatchAsync<RestTeam>($"/teams/{teamId}", request);
     }

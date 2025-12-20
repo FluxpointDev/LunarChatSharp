@@ -10,6 +10,17 @@ public class EditRoleRequest : ILunarRequest
     [JsonPropertyName("color")]
     public string? Color { get; set; }
 
+    [JsonPropertyName("icon")]
+    public string? Icon { get; set; }
+
+    public string? GetIconUrl()
+    {
+        if (string.IsNullOrEmpty(Icon))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{Icon}/emoji.webp";
+    }
+
     [JsonPropertyName("permissions")]
     public RestPermissions? Permissions { get; set; }
 }

@@ -15,6 +15,25 @@ public class RestServer
     [JsonPropertyName("icon_id")]
     public string? IconId { get; set; }
 
+    public string? GetIconUrl()
+    {
+        if (string.IsNullOrEmpty(IconId))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{IconId}/icon.webp";
+    }
+
+    [JsonPropertyName("banner_id")]
+    public string? BannerId { get; set; }
+
+    public string? GetBannerUrl()
+    {
+        if (string.IsNullOrEmpty(BannerId))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{BannerId}/banner.webp";
+    }
+
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 

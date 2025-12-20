@@ -13,8 +13,6 @@ namespace LunarChatSharp.Websocket;
 public class SocketState
 {
     public RestAccount Account;
-    public SocketServerState? CurrentServer;
-    public RestChannel? CurrentChannel;
     public string LunarCommunityId = null!;
     public string LunarDevId = null!;
 
@@ -30,7 +28,7 @@ public class SocketState
 }
 public class SocketServerState
 {
-    public SocketServerState(ServerState server, RestMember member)
+    public SocketServerState(LunarClient client, ServerState server, RestMember member)
     {
         Server = server.Server;
         Member = member;
@@ -38,7 +36,17 @@ public class SocketServerState
         Roles = server.Roles;
         Apps = server.Apps;
         Emojis = server.Emojis;
+        client.OnPermissionUpdate += PermissionUpdate;
     }
+
+    private async Task PermissionUpdate(RestServer server)
+    {
+        if (Server.Id != server.Id)
+            return;
+
+        OnPermissionUpdate?.Invoke(server);
+    }
+
     public RestServer Server;
     public RestMember Member;
 
@@ -46,12 +54,7 @@ public class SocketServerState
     public ConcurrentDictionary<string, RestRole> Roles;
     public ConcurrentDictionary<string, RestEmoji> Emojis;
     public ConcurrentDictionary<string, RestApp> Apps;
-
-    public Func<RestChannel, Task> OnChannelCreate;
-    public Func<RestChannel, Task> OnChannelDelete;
-    public Func<RestChannel, UpdateChannelRequest, Task> OnChannelUpdate;
-
-    public Func<Task> OnPermissionUpdate;
+    public Func<RestServer, Task>? OnPermissionUpdate;
 
     public bool CanManageServer(RestMember member)
     {

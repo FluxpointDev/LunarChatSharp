@@ -14,12 +14,6 @@ public class RoleUpdateEvent : ISocketEvent
     [JsonPropertyName("role_id")]
     public required string? RoleId { get; set; }
 
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    [JsonPropertyName("color")]
-    public string? Color { get; set; }
-
-    [JsonPropertyName("permissions")]
-    public RestPermissions? Permissions { get; set; }
+    [JsonPropertyName("changed")]
+    public required EditRoleRequest Changed { get; set; }
 }

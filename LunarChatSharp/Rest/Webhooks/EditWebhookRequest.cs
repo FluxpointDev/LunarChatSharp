@@ -6,4 +6,7 @@ public class EditWebhookRequest : ILunarRequest
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    [JsonPropertyName("avatar")]
+    public string? Avatar { get; set; }
 }

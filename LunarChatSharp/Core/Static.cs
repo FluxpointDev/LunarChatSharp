@@ -14,6 +14,8 @@ public static class Static
     public static int MaxInviteUses = 1000;
     public static int MaxBanDays = 30;
     public static int MaxGroupUsers = 25;
+
+    public static string AttachmentUrl = "https://lunar.fluxpoint.dev/api/attachments/";
     public static bool IsLink(string? text)
     {
 

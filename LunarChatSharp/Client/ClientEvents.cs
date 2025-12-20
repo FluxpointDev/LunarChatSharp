@@ -7,7 +7,6 @@ using LunarChatSharp.Rest.Users;
 using LunarChatSharp.Rest.Webhooks;
 using LunarChatSharp.Websocket.Events.Account;
 using LunarChatSharp.Websocket.Events.Messages;
-using LunarChatSharp.Websocket.Events.Roles;
 using LunarChatSharp.Websocket.Events.Servers;
 
 namespace LunarChatSharp.Client;
@@ -18,6 +17,7 @@ public class ClientEvents
     public Func<RestServer, Task>? OnAddServer;
     public Func<RestServer, Task>? OnRemoveServer;
     public Func<RestServer, ServerUpdateEvent, Task>? OnServerUpdate;
+    public Func<RestServer, Task>? OnPermissionUpdate;
     public Func<RestServer?, Task>? OnSelectServer;
     public Func<RestChannel?, Task>? OnSelectChannel;
 
@@ -31,7 +31,7 @@ public class ClientEvents
     public Func<AccountUpdateEvent, Task>? OnAccountUpdate;
 
     public Func<RestServer, RestRole, Task>? OnRoleCreate;
-    public Func<RestServer, RestRole, RoleUpdateEvent, Task>? OnRoleUpdate;
+    public Func<RestServer, RestRole, EditRoleRequest, Task>? OnRoleUpdate;
     public Func<RestServer, RestRole, Task>? OnRoleDelete;
 
     public Func<RestServer, RestEmoji, Task>? OnEmojiCreate;
@@ -39,7 +39,7 @@ public class ClientEvents
     public Func<RestServer, RestEmoji, Task>? OnEmojiDelete;
 
     public Func<RestServer?, RestChannel?, RestApp, Task>? OnAppAdd;
-    public Func<RestServer?, RestChannel?, RestApp, CreateAppRequest, Task>? OnAppUpdate;
+    public Func<RestServer?, RestChannel?, RestApp, EditAppRequest, Task>? OnAppUpdate;
     public Func<RestServer?, RestChannel?, RestApp, Task>? OnAppRemove;
 
     public Func<RestServer, RestInvite, Task>? OnInviteCreate;
@@ -66,4 +66,8 @@ public class ClientEvents
     public Func<RestChannel, RestWebhook, Task>? OnWebhookCreate;
     public Func<RestChannel, string, EditWebhookRequest, Task>? OnWebhookUpdate;
     public Func<RestChannel, string, Task>? OnWebhookDelete;
+
+    public Func<RestChannel, Task> OnChannelCreate;
+    public Func<RestChannel, Task> OnChannelDelete;
+    public Func<RestChannel, UpdateChannelRequest, Task> OnChannelUpdate;
 }

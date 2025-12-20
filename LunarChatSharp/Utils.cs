@@ -32,6 +32,8 @@ public static class Utils
         }
 
         string base64 = Convert.ToBase64String(bytes, 0, length);
+        if (string.IsNullOrEmpty(base64))
+            throw new Exception("Invalid image data");
         return $"data:image/png;base64,{base64}";
     }
 }

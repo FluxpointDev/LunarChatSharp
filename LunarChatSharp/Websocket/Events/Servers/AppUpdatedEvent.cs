@@ -18,5 +18,5 @@ public class AppUpdatedEvent : ISocketEvent
     public required string? AppId { get; set; }
 
     [JsonPropertyName("changed")]
-    public CreateAppRequest? Changed { get; set; }
+    public EditAppRequest? Changed { get; set; }
 }

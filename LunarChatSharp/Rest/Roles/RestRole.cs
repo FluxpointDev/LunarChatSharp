@@ -10,6 +10,17 @@ public class RestRole
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("icon_id")]
+    public string? IconId { get; set; }
+
+    public string? GetIconUrl()
+    {
+        if (string.IsNullOrEmpty(IconId))
+            return string.Empty;
+
+        return Static.AttachmentUrl + $"{IconId}/role.webp";
+    }
+
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
 
