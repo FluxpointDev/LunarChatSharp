@@ -9,5 +9,5 @@ public class RestUserPresence
     public string? Text { get; set; }
 
     [JsonPropertyName("status")]
-    public required UserStatusType Status { get; set; }
+    public UserStatusType Status { get; set; }
 }

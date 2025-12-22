@@ -1,5 +1,6 @@
 ﻿using LunarChatSharp.Core.Messages;
 using LunarChatSharp.Rest.Users;
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Messages;
@@ -35,4 +36,7 @@ public class RestMessage
 
     [JsonPropertyName("attachments")]
     public RestAttachment[]? Attachments { get; set; }
+
+    [JsonPropertyName("reactions")]
+    public ConcurrentDictionary<string, RestReaction>? Reactions { get; set; }
 }

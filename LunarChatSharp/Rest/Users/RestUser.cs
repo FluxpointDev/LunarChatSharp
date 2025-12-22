@@ -35,7 +35,7 @@ public class RestUser
     public UserBadgeType? Badges { get; set; }
 
     [JsonPropertyName("presence")]
-    public required RestUserPresence Presence { get; set; }
+    public RestUserPresence Presence { get; set; }
 
     [JsonPropertyName("is_bot")]
     public bool IsBot { get; set; }

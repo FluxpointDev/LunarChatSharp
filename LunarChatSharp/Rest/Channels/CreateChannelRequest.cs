@@ -15,8 +15,11 @@ public class CreateChannelRequest : ILunarRequest
     public string? Topic { get; set; }
 
     [JsonPropertyName("server_id")]
-    public string ServerId { get; set; }
+    public string? ServerId { get; set; }
 
     [JsonPropertyName("users")]
     public string[]? Users { get; set; }
+
+    [JsonPropertyName("parent_id")]
+    public string? ParentId { get; set; }
 }

@@ -17,6 +17,12 @@ public class RestChannel
     [JsonPropertyName("type")]
     public ChannelType Type { get; set; }
 
+    [JsonPropertyName("parent_id")]
+    public string? ParentId { get; set; }
+
+    [JsonPropertyName("position")]
+    public int Position { get; set; }
+
     [JsonPropertyName("topic")]
     public string? Topic { get; set; }
 

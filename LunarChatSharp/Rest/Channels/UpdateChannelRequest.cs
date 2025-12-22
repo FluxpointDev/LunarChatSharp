@@ -15,4 +15,10 @@ public class UpdateChannelRequest : ILunarRequest
 
     [JsonPropertyName("owner_id")]
     public string? OwnerId { get; set; }
+
+    [JsonPropertyName("parent_id")]
+    public string? ParentId { get; set; }
+
+    [JsonPropertyName("position")]
+    public int? Position { get; set; }
 }
