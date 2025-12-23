@@ -70,4 +70,9 @@ public class ClientEvents
     public Func<RestChannel, Task>? OnChannelCreate;
     public Func<RestChannel, Task>? OnChannelDelete;
     public Func<RestChannel, UpdateChannelRequest, Task>? OnChannelUpdate;
+
+    public Func<RestChannel, string, RestEmoji, string, Task>? OnReactionAdd;
+    public Func<RestChannel, string, RestEmoji, string, Task>? OnReactionRemove;
+    public Func<RestChannel, string, RestEmoji, Task>? OnReactionRemoveEmoji;
+    public Func<RestChannel, string, Task>? OnReactionRemoveAll;
 }

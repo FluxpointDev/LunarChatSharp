@@ -691,6 +691,57 @@ public class LunarSocketClient
 
                 #endregion
 
+                #region Reactions
+                case "reaction_add":
+                    {
+                        ReactionAddEvent? data = payload.Deserialize<ReactionAddEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnReactionAdd?.Invoke(channel, data.MessageId, data.Emoji, data.UserId);
+                    }
+                    break;
+                case "reaction_remove":
+                    {
+                        ReactionRemoveEvent? data = payload.Deserialize<ReactionRemoveEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnReactionRemove?.Invoke(channel, data.MessageId, data.Emoji, data.UserId);
+                    }
+                    break;
+                case "reaction_remove_emoji":
+                    {
+                        ReactionRemoveEmojiEvent? data = payload.Deserialize<ReactionRemoveEmojiEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnReactionRemoveEmoji?.Invoke(channel, data.MessageId, data.Emoji);
+                    }
+                    break;
+                case "reaction_remove_all":
+                    {
+                        ReactionRemoveAllEvent? data = payload.Deserialize<ReactionRemoveAllEvent>(JsonOptions);
+                        if (data == null)
+                            return;
+
+                        if (!State.Channels.TryGetValue(data.ChannelId, out var channel))
+                            return;
+
+                        Client.OnReactionRemoveAll?.Invoke(channel, data.MessageId);
+                    }
+                    break;
+                #endregion
+
                 #region Groups
                 case "group_user_add":
                     {
@@ -723,6 +774,7 @@ public class LunarSocketClient
                     }
                     break;
                 #endregion
+
                 #region Emojis
                 case "emoji_create":
                     {

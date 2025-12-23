@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Messages;
 
-public class RestMessage
+public class RestMessage : ICloneable
 {
     [JsonPropertyName("id")]
     public required string Id { get; set; }
@@ -39,4 +39,9 @@ public class RestMessage
 
     [JsonPropertyName("reactions")]
     public ConcurrentDictionary<string, RestReaction>? Reactions { get; set; }
+
+    public RestMessage Clone()
+    {
+        return (RestMessage)MemberwiseClone();
+    }
 }

@@ -12,6 +12,9 @@ public class RestReaction
     [JsonPropertyName("emoji")]
     public required RestEmoji Emoji { get; set; }
 
+    [JsonPropertyName("me")]
+    public bool hasReacted;
+
     [JsonIgnore]
     public ConcurrentDictionary<string, RestUser> Users = new ConcurrentDictionary<string, RestUser>();
 }
