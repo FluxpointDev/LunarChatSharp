@@ -38,4 +38,7 @@ public class RestRole
 
     [JsonPropertyName("permissions")]
     public required RestPermissions Permissions { get; set; }
+
+    [JsonPropertyName("managed_app")]
+    public string? ManagedApp { get; set; }
 }

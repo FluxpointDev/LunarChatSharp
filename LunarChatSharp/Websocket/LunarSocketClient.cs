@@ -299,7 +299,10 @@ public class LunarSocketClient
                             server.Server.VanityInvite = data.Changed.VanityInvite;
 
                         if (data.Changed.Icon != null)
-                            server.Server.IconId = data.Changed.Icon;
+                            server.Server.IconId = data.Changed.Icon.ToNullOrString();
+
+                        if (data.Changed.Banner != null)
+                            server.Server.BannerId = data.Changed.Banner.ToNullOrString();
 
                         if (!string.IsNullOrEmpty(data.Changed.OwnerId))
                             server.Server.OwnerId = data.Changed.OwnerId;
