@@ -9,8 +9,8 @@ public class MemberUnbanEvent : ISocketEvent
     public string Type { get; set; } = "member_unban";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("user")]
-    public required RestUser? User { get; set; }
+    public required RestUser User { get; set; }
 }

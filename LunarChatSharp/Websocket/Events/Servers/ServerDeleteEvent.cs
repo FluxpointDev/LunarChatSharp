@@ -8,5 +8,5 @@ public class ServerDeleteEvent : ISocketEvent
     public string Type { get; set; } = "server_delete";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 }

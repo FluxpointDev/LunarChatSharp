@@ -13,6 +13,9 @@ public class SocketEmoji : RestEmoji
             CreatedAt = data.CreatedAt,
             CreatedBy = data.CreatedBy,
             IconId = data.IconId,
+            SourceId = data.SourceId,
+            SourceType = data.SourceType,
+            IsAnimated = data.IsAnimated,
         };
 
         return emoji;

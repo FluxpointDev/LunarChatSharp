@@ -12,17 +12,17 @@ public static class UserHelpers
         return Json;
     }
 
-    public static async Task<RestUser?> GetUserAsync(this LunarRestClient rest, string userId)
+    public static async Task<RestUser?> GetUserAsync(this LunarRestClient rest, ulong userId)
     {
         return await rest.GetAsync<RestUser>($"/users/{userId}");
     }
 
-    public static async Task RemoveBlockAsync(this LunarRestClient rest, string userId)
+    public static async Task RemoveBlockAsync(this LunarRestClient rest, ulong userId)
     {
         await rest.DeleteAsync($"/users/{userId}/block");
     }
 
-    public static async Task UpdateNoteAsync(this LunarRestClient rest, string userId, string? note)
+    public static async Task UpdateNoteAsync(this LunarRestClient rest, ulong userId, string? note)
     {
         await rest.PatchAsync($"/users/{userId}/note", new UpdateNoteRequest
         {
@@ -30,7 +30,7 @@ public static class UserHelpers
         });
     }
 
-    public static async Task RemoveFriendAsync(this LunarRestClient rest, string userId)
+    public static async Task RemoveFriendAsync(this LunarRestClient rest, ulong userId)
     {
         await rest.DeleteAsync($"/users/{userId}/friend");
     }
@@ -50,7 +50,7 @@ public static class UserHelpers
         await rest.DeleteAsync($"/users/{username}/ignore");
     }
 
-    public static async Task RemoveIgnoreAsync(this LunarRestClient rest, string userId)
+    public static async Task RemoveIgnoreAsync(this LunarRestClient rest, ulong userId)
     {
         await rest.DeleteAsync($"/users/{userId}/ignore");
     }

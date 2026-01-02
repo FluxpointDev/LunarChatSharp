@@ -8,10 +8,10 @@ public class EmojiUpdateEvent : ISocketEvent
     public string Type { get; set; } = "emoji_update";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("emoji_id")]
-    public required string? EmojiId { get; set; }
+    public required ulong EmojiId { get; set; }
 
     [JsonPropertyName("name")]
     public required string? Name { get; set; }

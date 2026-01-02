@@ -9,7 +9,7 @@ public class ServerUpdateEvent : ISocketEvent
     public string Type { get; set; } = "server_update";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("changed")]
     public required EditServerRequest Changed { get; set; }

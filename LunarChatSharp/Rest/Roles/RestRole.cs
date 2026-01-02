@@ -1,21 +1,22 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Rest.Messages;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Roles;
 
 public class RestRole
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("icon_id")]
-    public string? IconId { get; set; }
+    public ulong? IconId { get; set; }
 
     public string? GetIconUrl()
     {
-        if (string.IsNullOrEmpty(IconId))
+        if (!IconId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{IconId}/role.webp";
@@ -28,17 +29,20 @@ public class RestRole
     public string? Color { get; set; }
 
     [JsonPropertyName("hoist")]
-    public bool? Hoist { get; set; }
+    public bool Hoist { get; set; }
 
     [JsonPropertyName("position")]
     public int Position { get; set; }
 
-    [JsonPropertyName("allow_mentions")]
-    public bool? AllowMentions { get; set; }
+    [JsonPropertyName("mentionable")]
+    public bool Mentionable { get; set; }
 
     [JsonPropertyName("permissions")]
     public required RestPermissions Permissions { get; set; }
 
-    [JsonPropertyName("managed_app")]
-    public string? ManagedApp { get; set; }
+    [JsonPropertyName("managed_app_id")]
+    public ulong? ManagedAppId { get; set; }
+
+    [JsonIgnore]
+    public RestAttachment? EditIcon;
 }

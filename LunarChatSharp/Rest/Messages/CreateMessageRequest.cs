@@ -13,6 +13,4 @@ public class CreateMessageRequest : ILunarRequest
 
     [JsonPropertyName("attachments")]
     public CreateAttachmentRequest[]? Attachments { get; set; }
-
-    internal bool IsSerialized;
 }

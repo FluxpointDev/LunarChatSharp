@@ -8,11 +8,11 @@ public class RoleDeleteEvent : ISocketEvent
     public string Type { get; set; } = "role_delete";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("role_id")]
-    public required string? RoleId { get; set; }
+    public required ulong RoleId { get; set; }
 
     [JsonPropertyName("positions")]
-    public Dictionary<string, int> Positions { get; set; }
+    public Dictionary<ulong, int> Positions { get; set; }
 }

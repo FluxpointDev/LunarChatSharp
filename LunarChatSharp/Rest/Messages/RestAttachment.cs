@@ -5,10 +5,13 @@ namespace LunarChatSharp.Rest.Messages;
 public class RestAttachment
 {
     [JsonPropertyName("id")]
-    public required string? Id { get; set; }
+    public required ulong Id { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public required DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("file_name")]
-    public required string? FileName { get; set; }
+    public required string FileName { get; set; }
 
     [JsonPropertyName("description")]
     public string? Description { get; set; }
@@ -17,13 +20,13 @@ public class RestAttachment
     public bool IsSpoiler { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public string? ChannelId { get; set; }
+    public ulong? ChannelId { get; set; }
 
     [JsonPropertyName("server_id")]
-    public string ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("user_id")]
-    public string? UserId { get; set; }
+    public required ulong UserId { get; set; }
 
     [JsonIgnore]
     public byte[] Image;

@@ -9,13 +9,13 @@ public class MessageUpdateEvent : ISocketEvent
     public string Type { get; set; } = "message_update";
 
     [JsonPropertyName("message_id")]
-    public required string? MessageId { get; set; }
+    public required ulong MessageId { get; set; }
 
     [JsonPropertyName("changed")]
     public required EditMessageRequest? Changed { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string? ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 
     [JsonPropertyName("updated_at")]
     public required DateTime? UpdatedAt { get; set; }

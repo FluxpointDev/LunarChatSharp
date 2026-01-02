@@ -3,5 +3,5 @@
 [Flags]
 public enum UserBadgeType : ulong
 {
-    Developer = 1 << 0
+    Developer = 1L << 0
 }

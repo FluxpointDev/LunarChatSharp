@@ -9,10 +9,10 @@ public class RestInvite
     public required string Code { get; set; }
 
     [JsonPropertyName("server_id")]
-    public required string ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string ChannelId { get; set; }
+    public ulong? ChannelId { get; set; }
 
     [JsonPropertyName("inviter")]
     public required RestUser? Inviter { get; set; }
@@ -21,13 +21,13 @@ public class RestInvite
     public ulong Uses { get; set; }
 
     [JsonPropertyName("created_at")]
-    public required DateTime? CreatedAt { get; set; }
+    public required DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("max_age")]
-    public int MaxAge { get; set; }
+    public int? MaxAge { get; set; }
 
     [JsonPropertyName("max_uses")]
-    public int MaxUses { get; set; }
+    public int? MaxUses { get; set; }
 
     [JsonPropertyName("expires_at")]
     public DateTime? ExpiresAt { get; set; }

@@ -9,10 +9,10 @@ public class RoleUpdateEvent : ISocketEvent
     public string Type { get; set; } = "role_update";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("role_id")]
-    public required string? RoleId { get; set; }
+    public required ulong RoleId { get; set; }
 
     [JsonPropertyName("changed")]
     public required EditRoleRequest Changed { get; set; }

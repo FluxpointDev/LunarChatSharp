@@ -9,11 +9,11 @@ internal class RoleCreateEvent : ISocketEvent
     public string Type { get; set; } = "role_create";
 
     [JsonPropertyName("server_id")]
-    public string ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("role")]
-    public required RestRole? Role { get; set; }
+    public required RestRole Role { get; set; }
 
     [JsonPropertyName("positions")]
-    public Dictionary<string, int> Positions { get; set; }
+    public Dictionary<ulong, int> Positions { get; set; }
 }

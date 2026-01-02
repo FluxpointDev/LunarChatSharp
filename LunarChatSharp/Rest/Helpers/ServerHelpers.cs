@@ -11,7 +11,7 @@ public static class ServerHelpers
         return await rest.PostAsync<RestCreatedServer>("/servers", request);
     }
 
-    public static async Task<RestAuditLog[]> GetAuditLogsAsync(this LunarRestClient rest, string serverId)
+    public static async Task<RestAuditLog[]> GetAuditLogsAsync(this LunarRestClient rest, ulong serverId)
     {
         RestAuditLog[]? audit = await rest.GetAsync<RestAuditLog[]>($"/servers/{serverId}/audit-logs");
         if (audit == null)
@@ -20,12 +20,12 @@ public static class ServerHelpers
         return audit;
     }
 
-    public static async Task<RestServer?> GetServerAsync(this LunarRestClient rest, string serverId)
+    public static async Task<RestServer?> GetServerAsync(this LunarRestClient rest, ulong serverId)
     {
         return await rest.GetAsync<RestServer>($"/servers/{serverId}");
     }
 
-    public static async Task<RestApp[]> GetServerAppsAsync(this LunarRestClient rest, string serverId)
+    public static async Task<RestApp[]> GetServerAppsAsync(this LunarRestClient rest, ulong serverId)
     {
         var apps = await rest.GetAsync<RestApp[]>($"/servers/{serverId}/apps");
         if (apps == null)
@@ -34,27 +34,27 @@ public static class ServerHelpers
         return apps;
     }
 
-    public static async Task<RestApp?> GetServerAppAsync(this LunarRestClient rest, string serverId, string appId)
+    public static async Task<RestApp?> GetServerAppAsync(this LunarRestClient rest, ulong serverId, ulong appId)
     {
         return await rest.GetAsync<RestApp>($"/servers/{serverId}/{appId}");
     }
 
-    public static async Task<RestServer> EditServerAsync(this LunarRestClient rest, string serverId, EditServerRequest request)
+    public static async Task<RestServer> EditServerAsync(this LunarRestClient rest, ulong serverId, EditServerRequest request)
     {
         return await rest.PatchAsync<RestServer>($"/servers/{serverId}", request);
     }
 
-    public static async Task DeleteServerAsync(this LunarRestClient rest, string serverId)
+    public static async Task DeleteServerAsync(this LunarRestClient rest, ulong serverId)
     {
         await rest.DeleteAsync($"/servers/{serverId}");
     }
 
-    public static async Task<RestBan?> GetBanAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task<RestBan?> GetBanAsync(this LunarRestClient rest, ulong serverId, ulong userId)
     {
         return await rest.GetAsync<RestBan>($"/servers/{serverId}/bans/{userId}");
     }
 
-    public static async Task<RestBan[]> GetBansAsync(this LunarRestClient rest, string serverId)
+    public static async Task<RestBan[]> GetBansAsync(this LunarRestClient rest, ulong serverId)
     {
         var members = await rest.GetAsync<RestBan[]>($"/servers/{serverId}/bans");
         if (members == null)

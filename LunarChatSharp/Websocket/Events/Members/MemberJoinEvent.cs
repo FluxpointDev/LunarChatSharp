@@ -9,8 +9,8 @@ public class MemberJoinEvent : ISocketEvent
     public string Type { get; set; } = "member_join";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("member")]
-    public required RestMember? Member { get; set; }
+    public required RestMember Member { get; set; }
 }

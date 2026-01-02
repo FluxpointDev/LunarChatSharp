@@ -9,11 +9,11 @@ public class AppAddEvent : ISocketEvent
     public string Type { get; set; } = "app_add";
 
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("group_id")]
-    public string? GroupId { get; set; }
+    public ulong? GroupId { get; set; }
 
     [JsonPropertyName("app")]
-    public required RestApp? App { get; set; }
+    public required RestApp App { get; set; }
 }

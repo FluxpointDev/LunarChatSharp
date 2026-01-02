@@ -1,4 +1,5 @@
-﻿using LunarChatSharp.Rest.Roles;
+﻿using LunarChatSharp.Rest.Messages;
+using LunarChatSharp.Rest.Roles;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Servers;
@@ -24,7 +25,7 @@ public class EditServerRequest : ILunarRequest
     public string? VanityInvite { get; set; }
 
     [JsonPropertyName("owner_id")]
-    public string? OwnerId { get; set; }
+    public ulong? OwnerId { get; set; }
 
     [JsonPropertyName("icon")]
     public string? Icon { get; set; }
@@ -46,4 +47,10 @@ public class EditServerRequest : ILunarRequest
 
         return Static.AttachmentUrl + $"{Banner}/banner.webp";
     }
+
+    [JsonIgnore]
+    public RestAttachment? EditIcon;
+
+    [JsonIgnore]
+    public RestAttachment? EditBanner;
 }

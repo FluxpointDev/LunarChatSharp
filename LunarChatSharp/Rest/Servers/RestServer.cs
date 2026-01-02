@@ -7,28 +7,28 @@ namespace LunarChatSharp.Rest.Servers;
 public class RestServer
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
     [JsonPropertyName("icon_id")]
-    public string? IconId { get; set; }
+    public ulong? IconId { get; set; }
 
     public string? GetIconUrl()
     {
-        if (string.IsNullOrEmpty(IconId))
+        if (!IconId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{IconId}/icon.webp";
     }
 
     [JsonPropertyName("banner_id")]
-    public string? BannerId { get; set; }
+    public ulong? BannerId { get; set; }
 
     public string? GetBannerUrl()
     {
-        if (string.IsNullOrEmpty(BannerId))
+        if (!BannerId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{BannerId}/banner.webp";
@@ -38,7 +38,7 @@ public class RestServer
     public string? Description { get; set; }
 
     [JsonPropertyName("owner_id")]
-    public required string OwnerId { get; set; }
+    public required ulong OwnerId { get; set; }
 
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
@@ -53,7 +53,7 @@ public class RestServer
     public required RestPermissions DefaultPermissions { get; set; }
 
     [JsonPropertyName("features")]
-    public ServerFeature Features { get; set; }
+    public ServerFeature? Features { get; set; }
 
     public string GetFallback()
     {

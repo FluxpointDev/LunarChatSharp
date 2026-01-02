@@ -16,5 +16,5 @@ public class RestReaction
     public bool hasReacted;
 
     [JsonIgnore]
-    public ConcurrentDictionary<string, RestUser> Users = new ConcurrentDictionary<string, RestUser>();
+    public ConcurrentDictionary<ulong, RestUser> Users = new ConcurrentDictionary<ulong, RestUser>();
 }

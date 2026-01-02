@@ -9,4 +9,20 @@ public static class StringExtensions
 
         return str;
     }
+
+    public static ulong? ToNullOrUlong(this string? value)
+    {
+        if (string.IsNullOrEmpty(value) || value == "0")
+            return null;
+
+        return ulong.Parse(value);
+    }
+
+    public static bool? ToNullOrTrue(this bool? value)
+    {
+        if (value.HasValue && value.Value)
+            return true;
+
+        return null;
+    }
 }

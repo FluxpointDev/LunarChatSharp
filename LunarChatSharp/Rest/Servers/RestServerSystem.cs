@@ -5,26 +5,26 @@ namespace LunarChatSharp.Rest.Servers;
 public class RestServerSystemMessages
 {
     [JsonPropertyName("member_joined")]
-    public string? MemberJoined { get; set; }
+    public ulong? MemberJoined { get; set; }
 
     [JsonPropertyName("member_left")]
-    public string? MemberLeft { get; set; }
+    public ulong? MemberLeft { get; set; }
 
     [JsonPropertyName("member_banned")]
-    public string? MemberBanned { get; set; }
+    public ulong? MemberBanned { get; set; }
 
     [JsonPropertyName("member_unbanned")]
-    public string? MemberUnbanned { get; set; }
+    public ulong? MemberUnbanned { get; set; }
 
     [JsonPropertyName("member_kicked")]
-    public string? MemberKicked { get; set; }
+    public ulong? MemberKicked { get; set; }
 
     [JsonPropertyName("member_timedout")]
-    public string? MemberTimedout { get; set; }
+    public ulong? MemberTimedout { get; set; }
 
     [JsonPropertyName("app_added")]
-    public string? AppAdded { get; set; }
+    public ulong? AppAdded { get; set; }
 
     [JsonPropertyName("app_removed")]
-    public string? AppRemoved { get; set; }
+    public ulong? AppRemoved { get; set; }
 }

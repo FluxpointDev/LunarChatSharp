@@ -6,26 +6,26 @@ namespace LunarChatSharp.Rest.Users;
 public class RestUser
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("username")]
-    public required string Username { get; set; }
+    public string Username { get; set; }
 
     [JsonPropertyName("discriminator")]
-    public required string? Discriminator { get; set; }
+    public short? Discriminator { get; set; }
 
-    [JsonPropertyName("about_me")]
-    public string? AboutMe { get; set; }
+    [JsonPropertyName("profile")]
+    public UserProfile? Profile { get; set; }
 
     [JsonPropertyName("display_name")]
     public string? DisplayName { get; set; }
 
     [JsonPropertyName("avatar_id")]
-    public string? AvatarId { get; set; }
+    public ulong? AvatarId { get; set; }
 
     public string? GetAvatarUrl()
     {
-        if (string.IsNullOrEmpty(AvatarId))
+        if (!AvatarId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{AvatarId}/avatar.webp";
@@ -41,7 +41,7 @@ public class RestUser
     public bool IsBot { get; set; }
 
     [JsonPropertyName("created_at")]
-    public required DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public string GetCurrentName()
     {
@@ -64,4 +64,9 @@ public class RestUser
 
         return $"{Split[0].ToUpper()[0]}{Split.Last().ToUpper()[0]}";
     }
+}
+public class UserProfile
+{
+    [JsonPropertyName("about_me")]
+    public string? AboutMe { get; set; }
 }

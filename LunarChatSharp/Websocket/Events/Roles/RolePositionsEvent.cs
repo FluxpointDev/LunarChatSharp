@@ -8,8 +8,8 @@ public class RolePositionsEvent : ISocketEvent
     public string Type { get; set; } = "role_positions";
 
     [JsonPropertyName("server_id")]
-    public string ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("positions")]
-    public Dictionary<string, int> Positions { get; set; }
+    public required Dictionary<ulong, int> Positions { get; set; }
 }

@@ -8,7 +8,7 @@ public class InviteDeleteEvent : ISocketEvent
     public string Type { get; set; } = "invite_delete";
 
     [JsonPropertyName("server_id")]
-    public required string ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("invite_code")]
     public required string Code { get; set; }

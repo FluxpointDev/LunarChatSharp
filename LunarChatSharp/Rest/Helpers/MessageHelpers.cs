@@ -6,7 +6,7 @@ namespace LunarChatSharp;
 
 public static class MessageHelpers
 {
-    public static async Task<RestMessage[]> GetMessagesAsync(this LunarRestClient rest, string channelId)
+    public static async Task<RestMessage[]> GetMessagesAsync(this LunarRestClient rest, ulong channelId)
     {
         RestMessage[]? messages = await rest.GetAsync<RestMessage[]>($"/channels/{channelId}/messages");
         if (messages == null)
@@ -15,12 +15,12 @@ public static class MessageHelpers
         return messages;
     }
 
-    public static async Task<RestMessage?> GetMessageAsync(this LunarRestClient rest, string channelId, string messageId)
+    public static async Task<RestMessage?> GetMessageAsync(this LunarRestClient rest, ulong channelId, ulong messageId)
     {
         return await rest.GetAsync<RestMessage>($"/channels/{channelId}/messages/{messageId}");
     }
 
-    public static async Task<RestMessage> SendMesssageAsync(this LunarRestClient rest, string channelId, CreateMessageRequest request)
+    public static async Task<RestMessage> SendMesssageAsync(this LunarRestClient rest, ulong channelId, CreateMessageRequest request)
     {
         if (request.Attachments != null && request.Attachments.Length != 0)
         {
@@ -42,12 +42,12 @@ public static class MessageHelpers
             return await rest.PostAsync<RestMessage>($"/channels/{channelId}/messages", request);
     }
 
-    public static async Task<RestMessage> EditMesssageAsync(this LunarRestClient rest, string channelId, EditMessageRequest request)
+    public static async Task<RestMessage> EditMesssageAsync(this LunarRestClient rest, ulong channelId, EditMessageRequest request)
     {
         return await rest.PatchAsync<RestMessage>($"/channels/{channelId}/messages", request);
     }
 
-    public static async Task DeleteMessageAsync(this LunarRestClient rest, string channelId, string messageId)
+    public static async Task DeleteMessageAsync(this LunarRestClient rest, ulong channelId, ulong messageId)
     {
         await rest.DeleteAsync($"/channels/{channelId}/messages/{messageId}");
     }

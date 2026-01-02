@@ -6,7 +6,7 @@ namespace LunarChatSharp.Rest.Users;
 public class RestRelation
 {
     [JsonPropertyName("user_id")]
-    public required string UserId { get; set; }
+    public required ulong UserId { get; set; }
 
     [JsonPropertyName("username")]
     public string Username { get; set; }
@@ -21,7 +21,7 @@ public class RestRelation
     public UserRelationType Type { get; set; }
 
     [JsonPropertyName("request_by")]
-    public string? RequestBy { get; set; }
+    public ulong? RequestBy { get; set; }
 
     [JsonPropertyName("is_important")]
     public bool? IsImportant { get; set; }

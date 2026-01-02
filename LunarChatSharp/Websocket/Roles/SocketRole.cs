@@ -10,7 +10,7 @@ public class SocketRole : RestRole
         {
             Id = data.Id,
             Name = data.Name,
-            AllowMentions = data.AllowMentions,
+            Mentionable = data.Mentionable,
             CreatedAt = data.CreatedAt,
             Color = data.Color,
             Hoist = data.Hoist,

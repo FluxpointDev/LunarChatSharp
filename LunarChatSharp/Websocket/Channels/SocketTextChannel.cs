@@ -8,6 +8,7 @@ public class SocketTextChannel : RestChannel
     {
         SocketTextChannel channel = new SocketTextChannel
         {
+            CreatedAt = data.CreatedAt,
             Id = data.Id,
             Name = data.Name,
             ServerId = data.ServerId,

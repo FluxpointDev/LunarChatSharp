@@ -2,5 +2,5 @@
 
 public enum MessageSourceType
 {
-    User, Bot, System, Webhook
+    User, App, System, Webhook
 }

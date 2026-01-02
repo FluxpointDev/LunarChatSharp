@@ -9,6 +9,6 @@ public class RelationCreateEvent : ISocketEvent
     public string Type { get; set; } = "account_relation_create";
 
     [JsonPropertyName("relation")]
-    public required RestRelation? Relation { get; set; }
+    public required RestRelation Relation { get; set; }
 
 }

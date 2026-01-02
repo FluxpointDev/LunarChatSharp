@@ -9,11 +9,11 @@ public class MemberBanEvent : ISocketEvent
     public string Type { get; set; } = "member_ban";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("member")]
-    public required RestMember? Member { get; set; }
+    public required RestMember Member { get; set; }
 
     [JsonPropertyName("ban")]
-    public required RestBan? Ban { get; set; }
+    public required RestBan Ban { get; set; }
 }

@@ -9,5 +9,5 @@ public class ChannelCreateEvent : ISocketEvent
     public string Type { get; set; } = "channel_create";
 
     [JsonPropertyName("channel")]
-    public required RestChannel? Channel { get; set; }
+    public required RestChannel Channel { get; set; }
 }

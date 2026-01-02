@@ -101,6 +101,7 @@ public class LunarRestClient
     internal static JsonSerializerOptions JsonOptions = new JsonSerializerOptions
     {
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault,
+        NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString,
     };
 
     internal static MediaTypeHeaderValue JsonHeader = new MediaTypeHeaderValue("application/json");

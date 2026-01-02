@@ -13,15 +13,15 @@ namespace LunarChatSharp.Websocket;
 public class SocketState
 {
     public RestAccount Account;
-    public string LunarCommunityId = null!;
-    public string LunarDevId = null!;
+    public ulong? LunarCommunityId = null;
+    public ulong? LunarDevId = null;
 
-    public ConcurrentDictionary<string, SocketServerState> Servers = new ConcurrentDictionary<string, SocketServerState>();
-    public ConcurrentDictionary<string, RestChannel> PrivateChannels = new ConcurrentDictionary<string, RestChannel>();
-    public ConcurrentDictionary<string, RestChannel> Channels = new ConcurrentDictionary<string, RestChannel>();
-    public ConcurrentDictionary<string, RestEmoji> Emojis = new ConcurrentDictionary<string, RestEmoji>();
-    public ConcurrentDictionary<string, RestRole> Roles = new ConcurrentDictionary<string, RestRole>();
-    public ConcurrentDictionary<string, RestRelation> Relations = new ConcurrentDictionary<string, RestRelation>();
+    public ConcurrentDictionary<ulong, SocketServerState> Servers = new ConcurrentDictionary<ulong, SocketServerState>();
+    public ConcurrentDictionary<ulong, RestChannel> PrivateChannels = new ConcurrentDictionary<ulong, RestChannel>();
+    public ConcurrentDictionary<ulong, RestChannel> Channels = new ConcurrentDictionary<ulong, RestChannel>();
+    public ConcurrentDictionary<ulong, RestEmoji> Emojis = new ConcurrentDictionary<ulong, RestEmoji>();
+    public ConcurrentDictionary<ulong, RestRole> Roles = new ConcurrentDictionary<ulong, RestRole>();
+    public ConcurrentDictionary<ulong, RestRelation> Relations = new ConcurrentDictionary<ulong, RestRelation>();
 
 
 
@@ -50,10 +50,10 @@ public class SocketServerState
     public RestServer Server;
     public RestMember Member;
 
-    public ConcurrentDictionary<string, RestChannel> Channels;
-    public ConcurrentDictionary<string, RestRole> Roles;
-    public ConcurrentDictionary<string, RestEmoji> Emojis;
-    public ConcurrentDictionary<string, RestApp> Apps;
+    public ConcurrentDictionary<ulong, RestChannel> Channels;
+    public ConcurrentDictionary<ulong, RestRole> Roles;
+    public ConcurrentDictionary<ulong, RestEmoji> Emojis;
+    public ConcurrentDictionary<ulong, RestApp> Apps;
     public Func<RestServer, Task>? OnPermissionUpdate;
 
     public bool CanManageServer(RestMember member)

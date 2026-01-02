@@ -9,11 +9,11 @@ public class ChannelUpdateEvent : ISocketEvent
     public string Type { get; set; } = "channel_update";
 
     [JsonPropertyName("changed")]
-    public required UpdateChannelRequest? Changed { get; set; }
+    public required UpdateChannelRequest Changed { get; set; }
 
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string? ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 }

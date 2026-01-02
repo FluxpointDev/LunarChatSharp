@@ -5,5 +5,5 @@ namespace LunarChatSharp.Rest.Channels;
 public class DeleteChannelRequest : ILunarRequest
 {
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 }

@@ -8,5 +8,5 @@ public class RelationDeleteEvent : ISocketEvent
     public string Type { get; set; } = "account_relation_delete";
 
     [JsonPropertyName("user_id")]
-    public required string? UserId { get; set; }
+    public required ulong UserId { get; set; }
 }

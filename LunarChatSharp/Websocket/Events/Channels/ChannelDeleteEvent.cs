@@ -8,8 +8,8 @@ public class ChannelDeleteEvent : ISocketEvent
     public string Type { get; set; } = "channel_delete";
 
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string? ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 }

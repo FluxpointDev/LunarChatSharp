@@ -5,5 +5,5 @@ namespace LunarChatSharp.Rest.Dev;
 public class InviteAppRequest : ILunarRequest
 {
     [JsonPropertyName("app_id")]
-    public string? AppId { get; set; }
+    public required ulong AppId { get; set; }
 }

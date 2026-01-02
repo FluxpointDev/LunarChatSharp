@@ -12,11 +12,11 @@ public class ReactionRemoveEmojiEvent : ISocketEvent
     public required RestEmoji Emoji { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 
     [JsonPropertyName("message_id")]
-    public required string MessageId { get; set; }
+    public required ulong MessageId { get; set; }
 
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 }

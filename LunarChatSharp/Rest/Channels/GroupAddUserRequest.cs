@@ -5,5 +5,5 @@ namespace LunarChatSharp.Rest.Channels;
 public class GroupAddUserRequest : ILunarRequest
 {
     [JsonPropertyName("user_id")]
-    public required string? UserId { get; set; }
+    public required ulong UserId { get; set; }
 }

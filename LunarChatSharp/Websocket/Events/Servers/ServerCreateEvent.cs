@@ -20,14 +20,14 @@ public class ServerCreateEvent : ISocketEvent
     public required RestMember? Member { get; set; }
 
     [JsonPropertyName("channels")]
-    public required ConcurrentDictionary<string, RestChannel> Channels { get; set; }
+    public required ConcurrentDictionary<ulong, RestChannel> Channels { get; set; }
 
     [JsonPropertyName("roles")]
-    public required ConcurrentDictionary<string, RestRole> Roles { get; set; }
+    public required ConcurrentDictionary<ulong, RestRole> Roles { get; set; }
 
     [JsonPropertyName("emojis")]
-    public required ConcurrentDictionary<string, RestEmoji> Emojis { get; set; }
+    public required ConcurrentDictionary<ulong, RestEmoji> Emojis { get; set; }
 
     [JsonPropertyName("apps")]
-    public required ConcurrentDictionary<string, RestApp> Apps { get; set; }
+    public required ConcurrentDictionary<ulong, RestApp> Apps { get; set; }
 }

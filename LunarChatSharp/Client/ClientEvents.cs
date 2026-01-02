@@ -51,7 +51,7 @@ public class ClientEvents
     public Func<RestServer, RestMember, Task>? OnMemberJoin;
     public Func<RestServer, RestMember, Task>? OnMemberLeft;
     public Func<RestServer, RestUser, Task>? OnMemberUnban;
-    public Func<RestServer, string, EditMemberRequest, Task>? OnMemberUpdate;
+    public Func<RestServer, ulong, EditMemberRequest, Task>? OnMemberUpdate;
 
     public Func<Task>? OnReady;
     public Func<RestChannel, Task>? OnDMCreate;
@@ -61,18 +61,18 @@ public class ClientEvents
     public Func<RestChannel, UpdateChannelRequest, Task>? OnGroupUpdate;
     public Func<RestChannel, Task>? OnGroupDelete;
     public Func<RestChannel, RestUser, Task>? OnGroupAddUser;
-    public Func<RestChannel, string, Task>? OnGroupRemoveUser;
+    public Func<RestChannel, ulong, Task>? OnGroupRemoveUser;
 
     public Func<RestChannel, RestWebhook, Task>? OnWebhookCreate;
-    public Func<RestChannel, string, EditWebhookRequest, Task>? OnWebhookUpdate;
-    public Func<RestChannel, string, Task>? OnWebhookDelete;
+    public Func<RestChannel, ulong, EditWebhookRequest, Task>? OnWebhookUpdate;
+    public Func<RestChannel, ulong, Task>? OnWebhookDelete;
 
     public Func<RestChannel, Task>? OnChannelCreate;
     public Func<RestChannel, Task>? OnChannelDelete;
     public Func<RestChannel, UpdateChannelRequest, Task>? OnChannelUpdate;
 
-    public Func<RestChannel, string, RestEmoji, string, Task>? OnReactionAdd;
-    public Func<RestChannel, string, RestEmoji, string, Task>? OnReactionRemove;
-    public Func<RestChannel, string, RestEmoji, Task>? OnReactionRemoveEmoji;
-    public Func<RestChannel, string, Task>? OnReactionRemoveAll;
+    public Func<RestChannel, ulong, RestEmoji, ulong, Task>? OnReactionAdd;
+    public Func<RestChannel, ulong, RestEmoji, ulong, Task>? OnReactionRemove;
+    public Func<RestChannel, ulong, RestEmoji, Task>? OnReactionRemoveEmoji;
+    public Func<RestChannel, ulong, Task>? OnReactionRemoveAll;
 }

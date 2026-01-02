@@ -9,7 +9,7 @@ namespace LunarChatSharp.Rest.Channels;
 public class RestChannel
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -17,8 +17,14 @@ public class RestChannel
     [JsonPropertyName("type")]
     public ChannelType Type { get; set; }
 
+    [JsonPropertyName("created_at")]
+    public required DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("archive_at")]
+    public DateTime? ArchiveAt { get; set; }
+
     [JsonPropertyName("parent_id")]
-    public string? ParentId { get; set; }
+    public ulong? ParentId { get; set; }
 
     [JsonPropertyName("position")]
     public int Position { get; set; }
@@ -27,7 +33,7 @@ public class RestChannel
     public string? Topic { get; set; }
 
     [JsonPropertyName("server_id")]
-    public string? ServerId { get; set; }
+    public ulong? ServerId { get; set; }
 
     [JsonPropertyName("users")]
     public HashSet<RestUser>? Users { get; set; }
@@ -53,19 +59,19 @@ public class RestChannel
 public class RestGroupSettings
 {
     [JsonPropertyName("owner_id")]
-    public string? OwnerId { get; set; }
+    public ulong? OwnerId { get; set; }
 
     [JsonPropertyName("icon_id")]
-    public string? IconId { get; set; }
+    public ulong? IconId { get; set; }
 
     public string? GetIconUrl()
     {
-        if (string.IsNullOrEmpty(IconId))
+        if (!IconId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{IconId}/group.webp";
     }
 
     [JsonPropertyName("apps")]
-    public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();
+    public ConcurrentDictionary<ulong, RestApp> Apps = new ConcurrentDictionary<ulong, RestApp>();
 }

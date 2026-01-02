@@ -8,7 +8,7 @@ public class RelationUpdateEvent : ISocketEvent
     public string Type { get; set; } = "account_relation_update";
 
     [JsonPropertyName("user_id")]
-    public required string? UserId { get; set; }
+    public required ulong UserId { get; set; }
 
     [JsonPropertyName("note")]
     public string? Note { get; set; }

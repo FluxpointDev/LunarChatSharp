@@ -5,12 +5,12 @@ namespace LunarChatSharp;
 
 public static class MemberHelpers
 {
-    public static async Task<RestMember?> GetMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task<RestMember?> GetMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId)
     {
         return await rest.GetAsync<RestMember>($"/servers/{serverId}/members/{userId}");
     }
 
-    public static async Task<RestMember[]> GetMembersAsync(this LunarRestClient rest, string serverId)
+    public static async Task<RestMember[]> GetMembersAsync(this LunarRestClient rest, ulong serverId)
     {
         var members = await rest.GetAsync<RestMember[]>($"/servers/{serverId}/members");
         if (members == null)
@@ -22,7 +22,7 @@ public static class MemberHelpers
     /// <summary>
     /// This is only used for internal lunar chat servers!
     /// </summary>
-    public static async Task AddMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task AddMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId)
     {
         await rest.PutAsync($"/servers/{serverId}/members/{userId}");
     }
@@ -30,42 +30,42 @@ public static class MemberHelpers
     /// <summary>
     /// This is only used for internal lunar chat servers!
     /// </summary>
-    public static async Task LeaveServerAsync(this LunarRestClient rest, string serverId)
+    public static async Task LeaveServerAsync(this LunarRestClient rest, ulong serverId)
     {
         await rest.DeleteAsync($"/servers/{serverId}/leave");
     }
 
-    public static async Task AddMemberRoleAsync(this LunarRestClient rest, string serverId, string userId, string roleId)
+    public static async Task AddMemberRoleAsync(this LunarRestClient rest, ulong serverId, ulong userId, ulong roleId)
     {
         await rest.PutAsync($"/servers/{serverId}/members/{userId}/roles/{roleId}");
     }
 
-    public static async Task RemoveMemberRoleAsync(this LunarRestClient rest, string serverId, string userId, string roleId)
+    public static async Task RemoveMemberRoleAsync(this LunarRestClient rest, ulong serverId, ulong userId, ulong roleId)
     {
         await rest.DeleteAsync($"/servers/{serverId}/members/{userId}/roles/{roleId}");
     }
 
-    public static async Task KickMemberAsync(this LunarRestClient rest, string serverId, string userId, ReasonRequest req)
+    public static async Task KickMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId, ReasonRequest req)
     {
         await rest.DeleteAsync($"/servers/{serverId}/members/{userId}", req);
     }
 
-    public static async Task<RestBan> BanMemberAsync(this LunarRestClient rest, string serverId, string userId, CreateBanRequest req)
+    public static async Task<RestBan> BanMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId, CreateBanRequest req)
     {
         return await rest.PutAsync<RestBan>($"/servers/{serverId}/bans/{userId}", req);
     }
 
-    public static async Task<RestBan> UnbanMemberAsync(this LunarRestClient rest, string serverId, string userId)
+    public static async Task<RestBan> UnbanMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId)
     {
         return await rest.DeleteAsync<RestBan>($"/servers/{serverId}/bans/{userId}");
     }
 
-    public static async Task<RestMember> EditMemberAsync(this LunarRestClient rest, string serverId, string userId, EditMemberRequest request)
+    public static async Task<RestMember> EditMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId, EditMemberRequest request)
     {
         return await rest.PatchAsync<RestMember>($"/servers/{serverId}/members/{userId}", request);
     }
 
-    public static async Task<RestMember> TimeoutMemberAsync(this LunarRestClient rest, string serverId, string userId, DateTime? time, string? reason)
+    public static async Task<RestMember> TimeoutMemberAsync(this LunarRestClient rest, ulong serverId, ulong userId, DateTime? time, string? reason)
     {
         var req = new EditMemberRequest
         {

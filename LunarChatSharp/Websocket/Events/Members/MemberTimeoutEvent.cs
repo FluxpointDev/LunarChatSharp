@@ -9,13 +9,13 @@ public class MemberTimeoutEvent : ISocketEvent
     public string Type { get; set; } = "member_timeout";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("member")]
-    public required RestMember? Member { get; set; }
+    public required RestMember Member { get; set; }
 
     [JsonPropertyName("timeout")]
-    public required DateTime? Timeout { get; set; }
+    public required DateTime Timeout { get; set; }
 
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }

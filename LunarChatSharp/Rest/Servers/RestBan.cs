@@ -5,6 +5,9 @@ namespace LunarChatSharp.Rest.Servers;
 
 public class RestBan
 {
+    [JsonPropertyName("server_id")]
+    public required ulong ServerId { get; set; }
+
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }
 

@@ -16,7 +16,7 @@ public class AuthEvent : ISocketEvent
     public string Type { get; set; } = "auth";
 
     [JsonPropertyName("user_id")]
-    public required string UserId { get; set; }
+    public required ulong UserId { get; set; }
 }
 public class ReadyEvent : ISocketEvent
 {
@@ -27,33 +27,33 @@ public class ReadyEvent : ISocketEvent
     public required RestAccount? Account { get; set; }
 
     [JsonPropertyName("servers")]
-    public required ConcurrentDictionary<string, ServerState>? Servers { get; set; }
+    public required ConcurrentDictionary<ulong, ServerState>? Servers { get; set; }
 
     [JsonPropertyName("private_channels")]
-    public required ConcurrentDictionary<string, RestChannel>? PrivateChannels { get; set; }
+    public required ConcurrentDictionary<ulong, RestChannel>? PrivateChannels { get; set; }
 
     [JsonPropertyName("members")]
-    public required ConcurrentDictionary<string, RestMember>? Members { get; set; }
+    public required ConcurrentDictionary<ulong, RestMember>? Members { get; set; }
 
     [JsonPropertyName("relations")]
-    public required Dictionary<string, RestRelation>? Relations { get; set; }
+    public required Dictionary<ulong, RestRelation>? Relations { get; set; }
 
     [JsonPropertyName("community_server_id")]
-    public required string? LunarCommunityId { get; set; }
+    public required ulong? LunarCommunityId { get; set; }
 
     [JsonPropertyName("dev_server_id")]
-    public required string? LunarDevId { get; set; }
+    public required ulong? LunarDevId { get; set; }
 }
 public class ServerState
 {
     [JsonIgnore]
-    public ConcurrentDictionary<string, RestBan> Bans = new ConcurrentDictionary<string, RestBan>();
+    public ConcurrentDictionary<ulong, RestBan> Bans = new ConcurrentDictionary<ulong, RestBan>();
 
     [JsonIgnore]
-    public ConcurrentDictionary<string, RestMember> Members = new ConcurrentDictionary<string, RestMember>();
+    public ConcurrentDictionary<ulong, RestMember> Members = new ConcurrentDictionary<ulong, RestMember>();
 
     [JsonPropertyName("apps")]
-    public ConcurrentDictionary<string, RestApp> Apps = new ConcurrentDictionary<string, RestApp>();
+    public ConcurrentDictionary<ulong, RestApp> Apps = new ConcurrentDictionary<ulong, RestApp>();
 
     [JsonPropertyName("server")]
     public RestServer Server { get; set; }
@@ -62,13 +62,13 @@ public class ServerState
     public List<RestAuditLog> AuditLogs = new List<RestAuditLog>();
 
     [JsonPropertyName("channels")]
-    public ConcurrentDictionary<string, RestChannel> Channels { get; set; } = new ConcurrentDictionary<string, RestChannel>();
+    public ConcurrentDictionary<ulong, RestChannel> Channels { get; set; } = new ConcurrentDictionary<ulong, RestChannel>();
 
     [JsonPropertyName("roles")]
-    public ConcurrentDictionary<string, RestRole> Roles { get; set; } = new ConcurrentDictionary<string, RestRole>();
+    public ConcurrentDictionary<ulong, RestRole> Roles { get; set; } = new ConcurrentDictionary<ulong, RestRole>();
 
     [JsonPropertyName("emojis")]
-    public ConcurrentDictionary<string, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<string, RestEmoji>();
+    public ConcurrentDictionary<ulong, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<ulong, RestEmoji>();
 
     public void PushAuditLog(RestAuditLog auditLog)
     {

@@ -8,13 +8,13 @@ namespace LunarChatSharp.Rest.Messages;
 public class RestMessage
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("content")]
     public string? Content { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 
     [JsonPropertyName("author")]
     public RestUser? Author { get; set; }
@@ -38,5 +38,5 @@ public class RestMessage
     public RestAttachment[]? Attachments { get; set; }
 
     [JsonPropertyName("reactions")]
-    public ConcurrentDictionary<string, RestReaction>? Reactions { get; set; }
+    public ConcurrentDictionary<ulong, RestReaction>? Reactions { get; set; }
 }

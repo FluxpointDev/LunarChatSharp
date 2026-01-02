@@ -9,10 +9,10 @@ public class WebhookUpdateEvent : ISocketEvent
     public string Type { get; set; } = "webhook_update";
 
     [JsonPropertyName("webhook_id")]
-    public required string? WebhookId { get; set; }
+    public required ulong WebhookId { get; set; }
 
     [JsonPropertyName("channel_id")]
-    public required string? ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 
     [JsonPropertyName("changed")]
     public EditWebhookRequest Changed { get; set; }

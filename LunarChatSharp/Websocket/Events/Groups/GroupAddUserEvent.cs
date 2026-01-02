@@ -9,8 +9,8 @@ public class GroupAddUserEvent : ISocketEvent
     public string Type { get; set; } = "group_user_add";
 
     [JsonPropertyName("channel_id")]
-    public required string? ChannelId { get; set; }
+    public required ulong ChannelId { get; set; }
 
     [JsonPropertyName("user")]
-    public required RestUser? User { get; set; }
+    public required RestUser User { get; set; }
 }

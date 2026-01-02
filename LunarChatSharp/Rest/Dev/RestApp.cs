@@ -5,7 +5,7 @@ namespace LunarChatSharp.Rest.Dev;
 public class RestApp
 {
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public required ulong Id { get; set; }
 
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -14,14 +14,14 @@ public class RestApp
     public string? Description { get; set; }
 
     [JsonPropertyName("owner_id")]
-    public required string OwnerId { get; set; }
+    public required ulong OwnerId { get; set; }
 
     [JsonPropertyName("avatar_id")]
-    public string? AvatarId { get; set; }
+    public ulong? AvatarId { get; set; }
 
     public string? GetAvatarUrl()
     {
-        if (string.IsNullOrEmpty(AvatarId))
+        if (!AvatarId.HasValue)
             return string.Empty;
 
         return Static.AttachmentUrl + $"{AvatarId}/avatar.webp";
@@ -30,15 +30,15 @@ public class RestApp
     [JsonPropertyName("created_at")]
     public required DateTime CreatedAt { get; set; }
 
-    [JsonPropertyName("website")]
-    public string? Website { get; set; }
+    [JsonPropertyName("website_url")]
+    public string? WebsiteUrl { get; set; }
 
-    [JsonPropertyName("terms")]
-    public string? Terms { get; set; }
+    [JsonPropertyName("terms_url")]
+    public string? TermsUrl { get; set; }
 
-    [JsonPropertyName("privacy")]
-    public string? Privacy { get; set; }
+    [JsonPropertyName("privacy_url")]
+    public string? PrivacyUrl { get; set; }
 
     [JsonPropertyName("is_public")]
-    public bool? IsPublic { get; set; }
+    public bool IsPublic { get; set; }
 }

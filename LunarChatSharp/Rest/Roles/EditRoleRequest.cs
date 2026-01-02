@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Rest.Messages;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Roles;
 
@@ -13,6 +14,15 @@ public class EditRoleRequest : ILunarRequest
     [JsonPropertyName("icon")]
     public string? Icon { get; set; }
 
+    [JsonPropertyName("hoist")]
+    public bool? Hoist { get; set; }
+
+    [JsonPropertyName("position")]
+    public int? Position { get; set; }
+
+    [JsonPropertyName("mentionable")]
+    public bool? Mentionable { get; set; }
+
     public string? GetIconUrl()
     {
         if (string.IsNullOrEmpty(Icon))
@@ -23,4 +33,7 @@ public class EditRoleRequest : ILunarRequest
 
     [JsonPropertyName("permissions")]
     public RestPermissions? Permissions { get; set; }
+
+    [JsonIgnore]
+    public RestAttachment? EditIcon;
 }

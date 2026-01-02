@@ -1,12 +1,16 @@
 ﻿using LunarChatSharp.Rest.Users;
+using LunarChatSharp.Websocket.Events;
 using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Servers;
 
 public class RestAuditLog
 {
+    [JsonPropertyName("server_id")]
+    public required ulong ServerId { get; set; }
+
     [JsonPropertyName("target_id")]
-    public required string TargetId { get; set; }
+    public required ulong TargetId { get; set; }
 
     [JsonPropertyName("target_name")]
     public required string TargetName { get; set; }
@@ -15,7 +19,7 @@ public class RestAuditLog
     public required TargetType? TargetType { get; set; }
 
     [JsonPropertyName("user_id")]
-    public required string UserId { get; set; }
+    public required ulong UserId { get; set; }
 
     [JsonPropertyName("user_name")]
     public required string UserName { get; set; }
@@ -29,10 +33,11 @@ public class RestAuditLog
     [JsonPropertyName("action_at")]
     public required DateTime ActionAt { get; set; }
 
-    public static RestAuditLog Create(RestUser currentUser, TargetType targetType, ActionType actionType, string targetId, string targetName)
+    public static RestAuditLog Create(ServerState server, RestUser currentUser, TargetType targetType, ActionType actionType, ulong targetId, string targetName)
     {
         return new RestAuditLog
         {
+            ServerId = server.Server.Id,
             ActionType = actionType,
             TargetId = targetId,
             TargetName = targetName,

@@ -17,13 +17,13 @@ public class RestEmbed
     [JsonPropertyName("color")]
     public string? Color { get; set; }
 
-    [JsonPropertyName("image")]
-    public string? Image { get; set; }
+    [JsonPropertyName("image_url")]
+    public string? ImageUrl { get; set; }
 
-    [JsonPropertyName("thumbnail")]
-    public string? Thumbnail { get; set; }
+    [JsonPropertyName("thumbnail_url")]
+    public string? ThumbnailUrl { get; set; }
 
-    [JsonPropertyName("url")]
+    [JsonPropertyName("source_url")]
     public string? SourceUrl { get; set; }
 
     [JsonPropertyName("source_type")]
@@ -35,8 +35,8 @@ public class RestEmbed
     [JsonPropertyName("fields")]
     public RestEmbedField[] Fields { get; set; }
 
-    [JsonPropertyName("video")]
-    public string? Video { get; set; }
+    [JsonPropertyName("video_url")]
+    public string? VideoUrl { get; set; }
 
     [JsonPropertyName("footer")]
     public RestEmbedFooter? Footer { get; set; }

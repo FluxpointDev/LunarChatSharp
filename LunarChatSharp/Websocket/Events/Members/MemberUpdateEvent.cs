@@ -9,11 +9,11 @@ public class MemberUpdateEvent : ISocketEvent
     public string Type { get; set; } = "member_update";
 
     [JsonPropertyName("server_id")]
-    public required string? ServerId { get; set; }
+    public required ulong ServerId { get; set; }
 
     [JsonPropertyName("user_id")]
-    public required string? UserId { get; set; }
+    public required ulong UserId { get; set; }
 
     [JsonPropertyName("data")]
-    public required EditMemberRequest? Changed { get; set; }
+    public required EditMemberRequest Changed { get; set; }
 }
