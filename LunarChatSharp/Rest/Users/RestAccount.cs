@@ -14,10 +14,10 @@ public class RestAccount
     public required string Email { get; set; }
 
     [JsonPropertyName("friend_request_access")]
-    public required RestAccountAccess? FriendRequestAccess { get; set; }
+    public required RestAccountAccess FriendRequestAccess { get; set; }
 
     [JsonPropertyName("direct_messages_access")]
-    public required RestAccountAccess? DirectMessagesAccess { get; set; }
+    public required RestAccountAccess DirectMessagesAccess { get; set; }
 
     [JsonPropertyName("flagged")]
     public bool? Flagged { get; set; }

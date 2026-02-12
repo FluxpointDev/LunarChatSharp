@@ -16,6 +16,9 @@ public class SocketRole : RestRole
             Hoist = data.Hoist,
             Permissions = data.Permissions,
             Position = data.Position,
+            ServerId = data.ServerId,
+            IconId = data.IconId,
+            ManagedAppId = data.ManagedAppId,
         };
 
         return role;

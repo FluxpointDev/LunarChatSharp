@@ -14,6 +14,9 @@ public class RestEmoji
     [JsonPropertyName("icon_id")]
     public required ulong IconId { get; set; }
 
+    [JsonPropertyName("server_id")]
+    public ulong? ServerId { get; set; }
+
     public string? GetIconUrl()
     {
         if (IconId == 0)

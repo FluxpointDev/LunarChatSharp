@@ -15,6 +15,15 @@ public class CreateAccountRequest : ILunarRequest
 }
 public class EditAccountRequest : ILunarRequest
 {
+    [JsonPropertyName("display_name")]
+    public string? DisplayName { get; set; }
+
+    [JsonPropertyName("username")]
+    public string? Username { get; set; }
+
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
+
     [JsonPropertyName("about_me")]
     public string? AboutMe { get; set; }
 
@@ -45,6 +54,9 @@ public class EditFriendRequestAccess
 
     [JsonPropertyName("mutual_friends")]
     public bool? MutualFriends { get; set; }
+
+    [JsonPropertyName("verified")]
+    public bool? Verified { get; set; }
 }
 public class EditDirectMessagesAccess
 {
@@ -56,6 +68,9 @@ public class EditDirectMessagesAccess
 
     [JsonPropertyName("mutual_friends")]
     public bool? MutualFriends { get; set; }
+
+    [JsonPropertyName("verified")]
+    public bool? Verified { get; set; }
 }
 public class CreateDemoAccountRequest : ILunarRequest
 {

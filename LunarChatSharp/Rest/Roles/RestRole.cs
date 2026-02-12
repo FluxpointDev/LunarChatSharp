@@ -14,6 +14,9 @@ public class RestRole
     [JsonPropertyName("icon_id")]
     public ulong? IconId { get; set; }
 
+    [JsonPropertyName("server_id")]
+    public required ulong ServerId { get; set; }
+
     public string? GetIconUrl()
     {
         if (!IconId.HasValue)

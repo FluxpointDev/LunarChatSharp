@@ -47,9 +47,6 @@ public class ReadyEvent : ISocketEvent
 public class ServerState
 {
     [JsonIgnore]
-    public ConcurrentDictionary<ulong, RestBan> Bans = new ConcurrentDictionary<ulong, RestBan>();
-
-    [JsonIgnore]
     public ConcurrentDictionary<ulong, RestMember> Members = new ConcurrentDictionary<ulong, RestMember>();
 
     [JsonPropertyName("apps")]
@@ -57,9 +54,6 @@ public class ServerState
 
     [JsonPropertyName("server")]
     public RestServer Server { get; set; }
-
-    [JsonIgnore]
-    public List<RestAuditLog> AuditLogs = new List<RestAuditLog>();
 
     [JsonPropertyName("channels")]
     public ConcurrentDictionary<ulong, RestChannel> Channels { get; set; } = new ConcurrentDictionary<ulong, RestChannel>();
@@ -70,13 +64,6 @@ public class ServerState
     [JsonPropertyName("emojis")]
     public ConcurrentDictionary<ulong, RestEmoji> Emojis { get; set; } = new ConcurrentDictionary<ulong, RestEmoji>();
 
-    public void PushAuditLog(RestAuditLog auditLog)
-    {
-        if (AuditLogs.Count >= 101)
-            AuditLogs.RemoveAt(100);
-
-        AuditLogs.Add(auditLog);
-    }
 
     public bool HasPermission(RestMember member, ServerPermission permission)
     {

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using LunarChatSharp.Core.Messages;
+using System.Text.Json.Serialization;
 
 namespace LunarChatSharp.Rest.Messages;
 
@@ -12,6 +13,9 @@ public class RestAttachment
 
     [JsonPropertyName("file_name")]
     public required string FileName { get; set; }
+
+    [JsonPropertyName("file_type")]
+    public required AttachmentFileType FileType { get; set; }
 
     [JsonPropertyName("description")]
     public string? Description { get; set; }
@@ -30,4 +34,19 @@ public class RestAttachment
 
     [JsonIgnore]
     public byte[] Image;
+
+    public string GetFileTypeName()
+    {
+        switch (FileType)
+        {
+            case AttachmentFileType.ImageWebp:
+                return "webp";
+            case AttachmentFileType.ImagePng:
+                return "png";
+            case AttachmentFileType.ImageJpg:
+                return "jpg";
+        }
+
+        return null;
+    }
 }

@@ -21,10 +21,10 @@ public class LunarClient : ClientEvents
     {
         Token = token;
         Rest.Http.DefaultRequestHeaders.Add("Auth-Id", token);
-        CurrentId = token;
+        CurrentId = ulong.Parse(token);
     }
 
-    public string? CurrentId { get; internal set; }
+    public ulong? CurrentId { get; internal set; }
 
     private void ConfigSafetyChecks()
     {
